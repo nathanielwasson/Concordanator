@@ -5,6 +5,7 @@ import java.io.File;
 public class Bookshelf {
     
     public static void main(String[] args) {
+        System.out.println(System.getProperty("os.name"));
         Bookshelf myBooks = new Bookshelf();
         myBooks.inventoryBooks();
         System.out.println("The number of books are: " + myBooks.getNumberOfBooks());
@@ -48,8 +49,14 @@ public class Bookshelf {
     }
     
     public void inventoryBooks(){
-        if (new File("C:\\Users\\Metalaxe\\Documents\\NetBeansProjects\\Concordanator\\src\\books").isDirectory()){
-        File dir = new File("C:\\Users\\Metalaxe\\Documents\\NetBeansProjects\\Concordanator\\src\\books");
+        String fileDirectory = "";
+        if (System.getProperty("os.name").substring(0, 2).equals("Wi")){
+            fileDirectory = "src\\books"; 
+            } else if (System.getProperty("os.name").substring(0, 2).equals("Li")){
+              fileDirectory = "books";   
+            }
+        if (new File(fileDirectory).isDirectory()){
+        File dir = new File(fileDirectory);
         File[] directoryListing = dir.listFiles();
         if (directoryListing != null) {
         for (File child : directoryListing) {
