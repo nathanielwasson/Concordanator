@@ -46,7 +46,7 @@ public class Bookshelf {
         int index = 0;
         Book curr = header.next;
         while (curr != header){
-            temp[index] = curr.getTitle();
+            temp[index] = curr.getTitle() + " by " + curr.getAuthor();
             index++;
             curr = curr.next;
         }
@@ -145,7 +145,7 @@ public class Bookshelf {
                 //System.out.println(line);
                 if (line.length() >= 7){
                 if (line.substring(0, 7).contains("Title:")){
-                  temp[0] = line.substring(8, line.length());
+                  temp[0] = line.substring(7, line.length());
                   parts++;
                 }
                 if (line.substring(0, 8).contains("Author:")){
