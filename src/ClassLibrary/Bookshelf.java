@@ -1,11 +1,16 @@
 package ClassLibrary;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Bookshelf {
     
     public static void main(String[] args) {
-        System.out.println(System.getProperty("os.name"));
         Bookshelf myBooks = new Bookshelf();
         myBooks.inventoryBooks();
         System.out.println("The number of books are: " + myBooks.getNumberOfBooks());
@@ -21,11 +26,15 @@ public class Bookshelf {
     // Private class fields
     private int numElements;
     private Book header;
+    private final String windowsBookDirectory = "src\\books";
+    private final String linuxBookDirectory = "books";
+    private String OSName;
     
     // Class constructor
     public Bookshelf(){
-        header = new Book();  // Creates empty node for header.
-        numElements = 0;
+        this.header = new Book();  // Creates empty node for header.
+        this.numElements = 0;
+        this.OSName = System.getProperty("os.name").substring(0, 3);
     }
     // Class methods
     public int getNumberOfBooks(){
@@ -50,18 +59,17 @@ public class Bookshelf {
     
     public void inventoryBooks(){
         String fileDirectory = "";
-        if (System.getProperty("os.name").substring(0, 2).equals("Wi")){
-            fileDirectory = "src\\books"; 
-            } else if (System.getProperty("os.name").substring(0, 2).equals("Li")){
-              fileDirectory = "books";   
-            }
+        if (this.OSName.equals("Win")){
+            fileDirectory = this.windowsBookDirectory; 
+            } else fileDirectory = this.linuxBookDirectory;
         if (new File(fileDirectory).isDirectory()){
         File dir = new File(fileDirectory);
         File[] directoryListing = dir.listFiles();
         if (directoryListing != null) {
         for (File child : directoryListing) {
-      // Do something with child
-            String[] pieces = child.getName().substring(0, child.getName().length() - 4).split("by");
+      // Strip the file extension and chop the file names into a String array using the keyword 'by'
+            //String[] pieces = child.getName().substring(0, child.getName().length() - 4).split("by");
+            String[] pieces = this.retrieveCredentialsFromFile(child.getName());
             this.addBook(pieces[0], pieces[1], child.getName());
     }
   } else {
@@ -119,6 +127,44 @@ public class Bookshelf {
              }                
         }
         return success;
+    }
+    
+    private String[] retrieveCredentialsFromFile(String fn){
+        String[] temp = new String[2];
+        File bookFile = null;
+        BufferedReader fileIn = null;
+        if (this.OSName.equals("Win")){
+            bookFile = new File(this.windowsBookDirectory + "\\" + fn); 
+            } else bookFile = new File(this.linuxBookDirectory + "/" + fn);
+        if (bookFile.isFile()){
+        try {
+            fileIn = new BufferedReader(new FileReader(bookFile));
+            int parts = 0;
+            while (fileIn.ready() && parts != 2){
+                String line = fileIn.readLine();
+                //System.out.println(line);
+                if (line.length() >= 7){
+                if (line.substring(0, 7).contains("Title:")){
+                  temp[0] = line.substring(8, line.length());
+                  parts++;
+                }
+                if (line.substring(0, 8).contains("Author:")){
+                   temp[1] = line.substring(8, line.length());
+                   parts++;
+                }
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Bookshelf.class.getName()).log(Level.SEVERE, null, ex);
+        }   catch (IOException ex) {
+                Logger.getLogger(Bookshelf.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+        } else {
+            // Do something if file does not exist.
+        }
+        
+        return temp;
     }
     
     // Private inner Book class.
