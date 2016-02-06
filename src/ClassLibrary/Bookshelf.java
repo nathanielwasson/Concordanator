@@ -95,9 +95,10 @@ public class Bookshelf {
         if (directoryListing != null) {
         for (File child : directoryListing) {
       // Strip the file extension and chop the file names into a String array using the keyword 'by'
-            //String[] pieces = child.getName().substring(0, child.getName().length() - 4).split("by");
+        if (child.getName().substring(child.getName().length() - 4).equals(".txt")){    // Exclude files that do not have a .txt file extention
             String[] pieces = this.retrieveCredentialsFromFile(child.getName());
             this.addBook(pieces[0], pieces[1], child.getName());
+        }
     }
   } else {
     // Handle the case where dir is not really a directory.
@@ -169,7 +170,6 @@ public class Bookshelf {
             int parts = 0;
             while (fileIn.ready() && parts != 2){
                 String line = fileIn.readLine();
-                //System.out.println(line);
                 if (line.length() >= 7){
                 if (line.substring(0, 7).contains("Title:")){
                   temp[0] = line.substring(7, line.length());
