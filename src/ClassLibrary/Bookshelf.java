@@ -9,11 +9,10 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Bookshelf {
+public final class Bookshelf {
     
     public static void main(String[] args) {
         Bookshelf myBooks = new Bookshelf();
-        myBooks.inventoryBooks();
         System.out.println("The number of books are: " + myBooks.getNumberOfBooks());
         String[] bookTitle = myBooks.getAllBookTitles();
         for (int i = 0;i < bookTitle.length;i++){
@@ -28,9 +27,6 @@ public class Bookshelf {
         }
     }
     
-    
-    
-    
     // Private class fields
     private int numElements;
     private Book header;
@@ -43,6 +39,7 @@ public class Bookshelf {
         this.header = new Book();  // Creates empty node for header.
         this.numElements = 0;
         this.OSName = System.getProperty("os.name").substring(0, 3);
+        this.inventoryBooks();
     }
     // Class methods
     public int getNumberOfBooks(){
