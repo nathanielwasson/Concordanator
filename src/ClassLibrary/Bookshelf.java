@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,6 +18,13 @@ public class Bookshelf {
         String[] bookTitle = myBooks.getAllBookTitles();
         for (int i = 0;i < bookTitle.length;i++){
             System.out.println(bookTitle[i]);
+        }
+        Scanner search = new Scanner(System.in);
+        System.out.print("Please enter a search term: ");
+        String searchTerm = search.nextLine();
+        String[] bookTitleBySearch = myBooks.getBookTitlesByKeyword(searchTerm);
+        for (int i = 0;i < bookTitleBySearch.length;i++){
+            System.out.println(bookTitleBySearch[i]);
         }
     }
     
@@ -54,6 +62,25 @@ public class Bookshelf {
         for (int i = 0;i < index;i++){
             temp2[i] = temp[i];
         }
+        return temp2;
+    }
+    
+    public String[] getBookTitlesByKeyword(String keyword){
+        String[] temp = new String[this.numElements];
+        int index = 0;
+        Book curr = header.next;
+        while (curr != header){
+            if (curr.getTitle().toLowerCase().contains(keyword.toLowerCase()) || curr.getAuthor().toLowerCase().contains(keyword.toLowerCase())){
+            temp[index] = curr.getTitle() + " by " + curr.getAuthor();
+            index++;
+            }
+            curr = curr.next;
+        }
+        String[] temp2 = new String[index];
+        for (int i = 0;i < index;i++){
+            temp2[i] = temp[i];
+        }
+        
         return temp2;
     }
     
