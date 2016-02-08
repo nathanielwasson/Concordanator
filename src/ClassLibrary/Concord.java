@@ -1,3 +1,6 @@
+
+package ClassLibrary;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +18,7 @@ import java.util.Set;
  * @param number_of_lines number of lines in the file
  * @author seth
  */
-public class concord{
+public class Concord {
     int number_of_lines;
     String file_name;
     String[] file_lines, flat_words;
@@ -40,7 +43,7 @@ public class concord{
         }
     }
     
-    public concord(String file_name) throws IOException{
+    public Concord(String file_name) throws IOException{
         this.file_name = file_name;
         this.number_of_lines = get_number_lines();
         this.file_lines = this.get_file_lines();

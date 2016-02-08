@@ -30,22 +30,22 @@ public class CmdRepl implements Serializable {
      * Constuctor for the repl.
      * @param args 
      */
-    public CmdRepl(String[] args) {
-       this.args = args;
-       
-       for (String arg : args) {
-           if (arg.equals("gui")) {
-              // Launch gui from here.
-           }
-           // Otherwise do continue and do nothing
-       }
+    public CmdRepl() {
+//       this.args = args;
+//       
+//       for (String arg : args) {
+//           if (arg.equals("gui")) {
+//              // Launch gui from here.
+//           }
+//           // Otherwise do continue and do nothing
+//       }
+        // The above code may actually be unecessary.
     }
     
     /***
      * Start the interactive interface to of the program.
      */
     public void startRepl(String prompt) throws IOException {
-        this.args = args;
         
         if (!prompt.isEmpty() && prompt.length() < 5 && prompt.endsWith(" ")) {
             this.prompt = prompt;
