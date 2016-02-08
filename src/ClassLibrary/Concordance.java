@@ -44,7 +44,20 @@ public class Concordance implements Serializable {
                     if (bookStart){
                         workLineNumber++;
                         // If the line is bigger than 0, do the following.
-                        // Split line into array
+                        if (line.length() > 0){
+                           // Split line into array
+                            String[] words = line.split(" ");
+                            for (int i = 0;i< words.length;i++){
+                                String word = words[i].toLowerCase();
+                                char firstChar = word.charAt(0);
+                                hashKey = (((int)firstChar % 97) + 1);
+                                System.out.println(hashKey);
+                                this.hastable[hashKey].add(new Word(word));
+                                System.out.println("Hash Key = " + hashKey);
+                                System.out.println("Word = " +word);
+                            }
+                        }
+                        
                         // filter out off bad chars and convert to lower case.
                         // Calculate hash for location of word.
                         // Check to see if word is already in the list, if not add it.
@@ -79,11 +92,11 @@ public class Concordance implements Serializable {
         ArrayList<Integer> line_numbers;
         int number_apperances, apperance_rank;
         
-        public Word(String w, String b, ArrayList<Integer>lns, int n, int a){
+        public Word(String w){
             this.word = w;
-            this.line_numbers = lns;
-            this.number_apperances = n;
-            this.apperance_rank = a;
+            this.line_numbers = null;
+            this.number_apperances = 1;
+            this.apperance_rank = 0;
         }
     }
 }
