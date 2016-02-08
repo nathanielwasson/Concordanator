@@ -1,5 +1,6 @@
 
 import ClassLibrary.Bookshelf;
+import ClassLibrary.Concordance;
 import java.util.Scanner;
 
 public class ConcordanceMaker{
@@ -17,5 +18,7 @@ public class ConcordanceMaker{
         for (String bookTitleBySearch1 : bookTitleBySearch) {
             System.out.println(bookTitleBySearch1);
         }
+        Concordance concord = new Concordance("The Time Machine", "H. G. Wells", "src\\books\\The Time Machine by H. G. Wells.txt");
+        System.out.println(concord.makeConcordance());
     }
 }
