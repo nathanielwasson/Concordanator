@@ -121,7 +121,9 @@ public class CmdRepl implements Serializable {
                 break;
             case "listcons" :
                 // handle
-                break;                
+                break;
+            default :
+                // Display help/usage
         }
         
         if (conLoaded) {

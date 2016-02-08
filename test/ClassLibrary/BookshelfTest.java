@@ -5,6 +5,7 @@
  */
 package ClassLibrary;
 
+import java.io.*;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -14,11 +15,33 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author zeroxff
+ * @author Cory Sabol
  */
 public class BookshelfTest {
     
+    private static String OS = System.getProperty("os.name").toLowerCase();
+    private String winPath = "src\\books";
+    private String nixPath = "src//books";
+    
     public BookshelfTest() {
+    }
+    
+    public static boolean isWindows() {
+
+    	return (OS.indexOf("win") >= 0);
+
+    }
+
+    public static boolean isMac() {
+
+    	return (OS.indexOf("mac") >= 0);
+
+    }
+
+    public static boolean isNix() {
+
+	return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 );
+		
     }
     
     @BeforeClass
@@ -44,11 +67,11 @@ public class BookshelfTest {
     public void testGetNumberOfBooks() {
         System.out.println("getNumberOfBooks");
         Bookshelf instance = new Bookshelf();
-        int expResult = 0;
+        int expResult = 20;
         int result = instance.getNumberOfBooks();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
@@ -58,11 +81,38 @@ public class BookshelfTest {
     public void testGetAllBookTitles() {
         System.out.println("getAllBookTitles");
         Bookshelf instance = new Bookshelf();
-        String[] expResult = null;
+        
+        // Create the list of titles to be expected
+        File folder = null;
+        
+        if (isWindows()) {
+            // Adhere to windows paths
+            folder = new File(winPath);
+        } else if (isNix()) {
+            // Adhere to *nix paths
+            folder = new File(nixPath);            
+        }
+        
+        // get the files in books dir
+        File[] files = folder.listFiles();
+        
+        String[] expResult = new String[20];
+        
+        // Create the exp results
+        System.out.println("Books: ");
+        for (int i = 0; i < files.length; i++) {
+            // Strip .txt from name
+            String title = files[i].getName().substring(0,
+                    files[i].getName().length() - 4);
+            
+            expResult[i] = title;
+            System.out.println(expResult[i]);
+        }
+                
         String[] result = instance.getAllBookTitles();
         assertArrayEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**

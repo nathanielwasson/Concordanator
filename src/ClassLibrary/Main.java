@@ -34,12 +34,21 @@ public class Main {
         // Start the repl from here
         CmdRepl repl = new CmdRepl();
         
+        // Test out get all book titles
+        Bookshelf shelf = new Bookshelf();
+        String[] titles = shelf.getAllBookTitles();
+        
+        System.out.println("Titles: ====================");
+        for (String s : titles) {
+            System.out.println(s);
+        }
+        
         try {
             
-            if (args[1].equals("gui")) {
+            if (args.length != 0 && args[1].equals("gui")) {
                 // Launch the gui from here
-            } else if (args.length == 1) {
-                repl.startRepl(" ");
+            } else if (args.length == 1 || args.length == 0) {
+                repl.startRepl("");
             } else {
                 // Print out usage to term
             }            
