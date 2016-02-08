@@ -57,6 +57,11 @@ public class Concordance implements Serializable {
                         }
                     }
                 }
+                System.out.println(bookTitle + " " + bookAuthor + " " + filePath);
+                System.out.println("Total line numbers of text file: " + fileLineNumber);
+                System.out.println("Total line numbers of the book: " + workLineNumber);
+                System.out.println("Book begins on line: " + this.bookStartLine);
+                success = true;
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(Concordance.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
