@@ -15,7 +15,7 @@ public final class Bookshelf {
     private int numElements;
     private Book header;
     private final String windowsBookDirectory = "src\\books";
-    private final String linuxBookDirectory = "books";
+    private final String linuxBookDirectory = "src/books";
     private String OSName;
 
     // Class constructor
