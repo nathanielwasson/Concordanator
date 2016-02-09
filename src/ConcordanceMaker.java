@@ -18,7 +18,10 @@ public class ConcordanceMaker{
         for (String bookTitleBySearch1 : bookTitleBySearch) {
             System.out.println(bookTitleBySearch1);
         }
-        Concordance concord = new Concordance("The Time Machine", "H. G. Wells", "src\\books\\The Time Machine by H. G. Wells.txt");
+        System.out.print("Please enter a book name: ");
+        searchTerm = search.nextLine();
+        String[] bookCreds = myBooks.pullBook(searchTerm);
+        Concordance concord = new Concordance(bookCreds[0], bookCreds[1], bookCreds[2]);
         System.out.println(concord.makeConcordance());
     }
 }
