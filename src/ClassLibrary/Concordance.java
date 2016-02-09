@@ -29,7 +29,6 @@ public class Concordance implements Serializable {
     public boolean makeConcordance(){
         boolean success = false;
         int fileLineNumber = 0;
-        int workLineNumber = 0;
         int hashKey;
         boolean bookStart = false;
         File file = new File(this.filePath);
@@ -41,20 +40,31 @@ public class Concordance implements Serializable {
                     fileLineNumber++;
                     String line = fileIn.readLine();
                     if (line.contains("*** END OF THIS PROJECT GUTENBERG")) bookStart = false;
+                    if (line.contains("*** START OF THIS PROJECT GUTENBERG")) {
+                        line = fileIn.readLine();
+                        bookStart = true;
+                    }
                     if (bookStart){
-                        workLineNumber++;
                         // If the line is bigger than 0, do the following.
                         if (line.length() > 0){
                            // Split line into array
                             String[] words = line.split(" ");
                             for (int i = 0;i< words.length;i++){
                                 String word = words[i].toLowerCase();
+                                if (word.length() > 0){
                                 char firstChar = word.charAt(0);
                                 hashKey = (((int)firstChar % 97) + 1);
+                                if (hashKey < 28){
                                 System.out.println(hashKey);
-                                this.hastable[hashKey].add(new Word(word));
+                                if (this.hastable[hashKey] == null){
+                                    this.hastable[hashKey] = new LinkedList();
+                                }
+                                Word addWord = new Word(word);
+                                this.hastable[hashKey].add(addWord);
                                 System.out.println("Hash Key = " + hashKey);
                                 System.out.println("Word = " +word);
+                            }
+                            }
                             }
                         }
                         
@@ -66,13 +76,12 @@ public class Concordance implements Serializable {
                     else {
                         if (line.contains("*** START OF THIS PROJECT GUTENBERG")) {
                             bookStart = true;
-                            this.bookStartLine = fileLineNumber + 1;
+                            this.bookStartLine = fileLineNumber + 1;    //No longer really need this..?
                         }
                     }
                 }
                 System.out.println(bookTitle + " " + bookAuthor + " " + filePath);
                 System.out.println("Total line numbers of text file: " + fileLineNumber);
-                System.out.println("Total line numbers of the book: " + workLineNumber);
                 System.out.println("Book begins on line: " + this.bookStartLine);
                 success = true;
             } catch (FileNotFoundException ex) {
