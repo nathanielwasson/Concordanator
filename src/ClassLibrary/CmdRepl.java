@@ -25,6 +25,7 @@ public class CmdRepl implements Serializable {
     private BufferedReader in = new BufferedReader(reader);
     private String cmdStr;
     private boolean conLoaded = false;
+    Bookshelf shelf;
     
     /***
      * Constuctor for the repl.
@@ -32,6 +33,7 @@ public class CmdRepl implements Serializable {
      */
     public CmdRepl(String[] args) {
        this.args = args;
+       shelf = new Bookshelf();
        
        for (String arg : args) {
            if (arg.equals("gui")) {
@@ -117,11 +119,17 @@ public class CmdRepl implements Serializable {
                 // handle 
                 break;
             case "listbooks" :
-                // handle
+                if (cmdArg.toString().equals("[]")){
+                this.listbooks();
+                }else {
+                   this.listbooks(cmdArg.toString().substring(1, cmdArg.toString().length() - 1));
+                }
                 break;
             case "listcons" :
                 // handle
-                break;                
+                break; 
+            case "exit" :
+                System.exit(0);
         }
         
         if (conLoaded) {
@@ -155,6 +163,24 @@ public class CmdRepl implements Serializable {
      */
     public int findArg(String arg) {
         throw new UnsupportedOperationException();
+    }
+    
+    private void listbooks(){
+        String[] titles = shelf.getAllBookTitles();
+        
+        System.out.println("Titles: ====================");
+        for (String s : titles) {
+            System.out.println(s);
+        }
+    }
+    
+    private void listbooks(String book){
+        String[] titles = shelf.getBookTitlesByKeyword(book);
+        
+        System.out.println("Titles: ====================");
+        for (String s : titles) {
+            System.out.println(s);
+        }
     }
 }
 
