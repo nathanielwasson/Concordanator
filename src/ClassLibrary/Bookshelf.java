@@ -101,7 +101,7 @@ public final class Bookshelf {
                     break;
                 }
                 else{
-                    temp[2] = LINUX_BOOK_DIRECTORY + curr.getFileName();
+                    temp[2] = LINUX_BOOK_DIRECTORY + "/" + curr.getFileName();
                     break;
                 }               
             }
