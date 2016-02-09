@@ -25,7 +25,11 @@ public class CmdRepl implements Serializable {
     private BufferedReader in = new BufferedReader(reader);
     private String cmdStr;
     private boolean conLoaded = false;
-    Bookshelf shelf;
+    private Bookshelf shelf;
+    
+    private enum Commands {
+    load, help, listbooks, listcons, exit;
+}
     
     /***
      * Constuctor for the repl.
@@ -111,24 +115,25 @@ public class CmdRepl implements Serializable {
             cmdArg = cmd.subList(1, cmd.size());
         }
         System.out.println("Command Arg: " + cmdArg.toString());
-        switch (cmd.get(0)) {
-            case "load" :
+        Commands command = Commands.valueOf(cmd.get(0));
+        switch (command) {
+            case load :
                 // Find the text in here.
                 break;
-            case "help" :
+            case help :
                 // handle 
                 break;
-            case "listbooks" :
+            case listbooks :
                 if (cmdArg.toString().equals("[]")){
                 this.listbooks();
                 }else {
                    this.listbooks(cmdArg.toString().substring(1, cmdArg.toString().length() - 1));
                 }
                 break;
-            case "listcons" :
+            case listcons :
                 // handle
                 break; 
-            case "exit" :
+            case exit :
                 System.exit(0);
         }
         
