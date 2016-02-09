@@ -64,7 +64,7 @@ public class CmdRepl implements Serializable {
             phrase <phrase>
          */
         
-        System.out.println("Welcome to Concordanator, the best darn concordance tool around ;^/)/n");
+        System.out.println("Welcome to Concordanator, the best darn concordance tool around ;^)\n");
         // Main repl loop.
         do {
             
