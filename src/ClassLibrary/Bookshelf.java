@@ -97,7 +97,7 @@ public final class Bookshelf {
                 temp[0] = curr.getTitle();
                 temp[1] = curr.getAuthor();
                 if (this.OSName.equals("Win")){
-                    temp[2] = WINDOWS_BOOK_DIRECTORY + "//" + curr.getFileName();
+                    temp[2] = WINDOWS_BOOK_DIRECTORY + "\\" + curr.getFileName();
                     break;
                 }
                 else{
