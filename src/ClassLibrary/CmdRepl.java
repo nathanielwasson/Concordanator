@@ -134,7 +134,8 @@ public class CmdRepl implements Serializable {
                 // handle
                 break; 
             case exit :
-                System.exit(0);
+                this.exit = true;
+                break;
         }
         
         if (conLoaded) {
