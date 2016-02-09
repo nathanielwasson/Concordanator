@@ -19,16 +19,16 @@ import java.util.List;
 public class CmdRepl implements Serializable {
     
     private String[] args;
-    private boolean exit = false;
+    private boolean exit;
     private String prompt = "> ";
-    private InputStreamReader reader = new InputStreamReader(System.in);
-    private BufferedReader in = new BufferedReader(reader);
+    private InputStreamReader reader;
+    private BufferedReader in;
     private String cmdStr;
-    private boolean conLoaded = false;
+    private boolean conLoaded;
     private Bookshelf shelf;
     
     private enum Commands {
-    load, help, listbooks, listcons, exit;
+    load, help, listbooks, listcons, invalid, exit;
 }
     
     /***
@@ -37,7 +37,11 @@ public class CmdRepl implements Serializable {
      */
     public CmdRepl(String[] args) {
        this.args = args;
-       shelf = new Bookshelf();
+       this.reader = new InputStreamReader(System.in);
+       this.in = new BufferedReader(reader);
+       this.exit = false;
+       this.conLoaded = false;
+       this.shelf = new Bookshelf();
        
        for (String arg : args) {
            if (arg.equals("gui")) {
@@ -110,12 +114,18 @@ public class CmdRepl implements Serializable {
     
     private void evalCmd(ArrayList<String> cmd) {
         List<String> cmdArg = new ArrayList<String>();
+        Commands command = Commands.valueOf("invalid");
         
         if (cmd.size() > 1) {
             cmdArg = cmd.subList(1, cmd.size());
         }
         System.out.println("Command Arg: " + cmdArg.toString());
-        Commands command = Commands.valueOf(cmd.get(0));
+        try {
+        command = Commands.valueOf(cmd.get(0));
+        }
+        catch(IllegalArgumentException e){
+            
+        }
         switch (command) {
             case load :
                 // Find the text in here.
@@ -136,6 +146,8 @@ public class CmdRepl implements Serializable {
             case exit :
                 this.exit = true;
                 break;
+            case invalid :
+                System.out.println("Invalid command.  Type 'help' for list of commands.");
         }
         
         if (conLoaded) {
