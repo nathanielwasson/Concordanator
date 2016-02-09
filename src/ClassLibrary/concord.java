@@ -25,6 +25,7 @@ public class concord{
     ArrayList<String> unique_words;
     String flat_words_full;
     HashMap<String, Integer> apperance_ranks = new HashMap<String, Integer>();
+    ArrayList<String> common_words = new ArrayList<String>();
     
   
     
@@ -39,6 +40,7 @@ public class concord{
         this.concord = this.get_concord();
         this.all_apperances = this.get_all_apperances();
         this.apperance_ranks = this.get_apperance_ranks();
+        this.common_words = this.get_common_words();
     }
     
     public class Word{
@@ -83,7 +85,19 @@ public class concord{
     public HashMap<String, Word> get_concord() {
         HashMap<String, Word> concord = new HashMap<String, Word>();
         for(String word: this.unique_words){
-            if (word != null){
+            ArrayList<Integer> lines = this.get_list_lines(word);
+            int num_occurances = this.get_number_occurances(word);
+            int app_rank = this.get_apperance_rank(word);
+            Word tword = new Word(word, lines, num_occurances, app_rank);
+            concord.put(word, tword);
+        }
+        return concord;
+    }
+
+    public HashMap<String, Word> get_concord_nocommon() {
+        HashMap<String, Word> concord = new HashMap<String, Word>();
+        for(String word: this.unique_words){
+            if (!(this.common_words.contains(word))){
                 ArrayList<Integer> lines = this.get_list_lines(word);
                 int num_occurances = this.get_number_occurances(word);
                 int app_rank = this.get_apperance_rank(word);
@@ -93,7 +107,7 @@ public class concord{
         }
         return concord;
     }
-
+    
     public ArrayList[] get_file_words() {
         ArrayList[] file_words = new ArrayList[this.number_of_lines];
         
@@ -171,6 +185,7 @@ public class concord{
         }
         return all_apperances;
     }
+    
     public int get_apperance_rank(String target_word){
         int num_apperances = this.get_number_occurances(target_word);
         int rank = 1;
@@ -188,5 +203,19 @@ public class concord{
             apperance_ranks.put(word, this.get_apperance_rank(word));
         }
         return apperance_ranks;
+    }
+    
+    public ArrayList<String> get_common_words() throws FileNotFoundException, IOException{
+            ArrayList<String> common_words = new ArrayList<String>();
+            
+            //open file
+            FileReader file_reader = new FileReader("commonwords.txt");
+            BufferedReader  buffered_reader = new BufferedReader(file_reader);
+            String line;
+            //Write each line in file to element in aray
+            while((line = buffered_reader.readLine())!=null){
+                common_words.add(line);
+            }
+            return common_words;
     }
 }
