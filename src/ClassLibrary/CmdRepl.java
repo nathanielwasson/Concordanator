@@ -109,7 +109,7 @@ public class CmdRepl implements Serializable {
             cmdArg = cmd.subList(1, cmd.size());
         }
         System.out.println("Command Arg: " + cmdArg.toString());
-        switch (cmd.get(0)) {
+        switch (cmd.get(0).toLowerCase()) {
             case "load" :
                 // Find the text in here.
                 break;
@@ -122,6 +122,8 @@ public class CmdRepl implements Serializable {
             case "listcons" :
                 // handle
                 break;
+            case "exit" :
+                exit = true;
             default :
                 // Display help/usage
         }
