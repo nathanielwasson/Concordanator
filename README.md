@@ -12,6 +12,16 @@ Tony Ratlif
 Cory Sebastain Sabol
 Seth Askew
 
+#### Using with netbeans:
+1. Clone the repo or switch to the master branch and `git pull origin master` to update.
+2. Create a new netbeans project in a separate directory from where you cloned the repo.
+3. Select create project from existing sources.
+4. Follow the prompts and add the src and test folder from the repo as sources for the project.
+5. finish
+
+Now you should have a working netbeans project. Git actions will need to be made from the repo dir.
+
+
 #### General Todo:
 1. Document all the things.
 2. Come up with more todos.
