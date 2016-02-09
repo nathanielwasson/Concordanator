@@ -3,6 +3,7 @@ build/
 nbbuild/
 dist/
 nbdist/
+test/
 nbactions.xml
 nb-configuration.xml
 build.xml
@@ -11,6 +12,8 @@ build.xml
 *.jar
 *.war
 *.ear
+
+*.mf
 
 *.swp
 
