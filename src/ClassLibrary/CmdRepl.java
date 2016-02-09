@@ -1,6 +1,8 @@
 /*
-Lisence stuff should go here.
-*/
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.  Tony made a change.
+ */
 package ClassLibrary;
 
 import java.io.*;
@@ -17,33 +19,43 @@ import java.util.List;
 public class CmdRepl implements Serializable {
     
     private String[] args;
-    private boolean exit = false;
+    private boolean exit;
     private String prompt = "> ";
-    private InputStreamReader reader = new InputStreamReader(System.in);
-    private BufferedReader in = new BufferedReader(reader);
+    private InputStreamReader reader;
+    private BufferedReader in;
     private String cmdStr;
-    private boolean conLoaded = false;
+    private boolean conLoaded;
+    private Bookshelf shelf;
+    
+    private enum Commands {
+    load, help, listbooks, listcons, invalid, exit;
+}
     
     /***
      * Constuctor for the repl.
      * @param args 
      */
     public CmdRepl() {
-//       this.args = args;
-//       
+       //this.args = args;
+       this.reader = new InputStreamReader(System.in);
+       this.in = new BufferedReader(reader);
+       this.exit = false;
+       this.conLoaded = false;
+       this.shelf = new Bookshelf();
+       
 //       for (String arg : args) {
 //           if (arg.equals("gui")) {
 //              // Launch gui from here.
 //           }
 //           // Otherwise do continue and do nothing
 //       }
-        // The above code may actually be unecessary.
     }
     
     /***
      * Start the interactive interface to of the program.
      */
     public void startRepl(String prompt) throws IOException {
+        this.args = args;
         
         if (!prompt.isEmpty() && prompt.length() < 5 && prompt.endsWith(" ")) {
             this.prompt = prompt;
@@ -64,7 +76,7 @@ public class CmdRepl implements Serializable {
             phrase <phrase>
          */
         
-        System.out.println("Welcome to Concordanator, the best darn concordance tool around ;^)\n");
+        System.out.println("Welcome to Concordanator, the best darn concordance tool around ;^/)/n");
         // Main repl loop.
         do {
             
@@ -102,28 +114,40 @@ public class CmdRepl implements Serializable {
     
     private void evalCmd(ArrayList<String> cmd) {
         List<String> cmdArg = new ArrayList<String>();
+        Commands command = Commands.valueOf("invalid");
         
         if (cmd.size() > 1) {
             cmdArg = cmd.subList(1, cmd.size());
         }
         System.out.println("Command Arg: " + cmdArg.toString());
-        switch (cmd.get(0).toLowerCase()) {
-            case "load" :
+        try {
+        command = Commands.valueOf(cmd.get(0));
+        }
+        catch(IllegalArgumentException e){
+            
+        }
+        switch (command) {
+            case load :
                 // Find the text in here.
                 break;
-            case "help" :
+            case help :
                 // handle 
                 break;
-            case "listbooks" :
-                // handle
+            case listbooks :
+                if (cmdArg.toString().equals("[]")){
+                this.listbooks();
+                }else {
+                   this.listbooks(cmdArg.toString().substring(1, cmdArg.toString().length() - 1));
+                }
                 break;
-            case "listcons" :
+            case listcons :
                 // handle
+                break; 
+            case exit :
+                this.exit = true;
                 break;
-            case "exit" :
-                exit = true;
-            default :
-                // Display help/usage
+            case invalid :
+                System.out.println("Invalid command.  Type 'help' for list of commands.");
         }
         
         if (conLoaded) {
@@ -157,6 +181,24 @@ public class CmdRepl implements Serializable {
      */
     public int findArg(String arg) {
         throw new UnsupportedOperationException();
+    }
+    
+    private void listbooks(){
+        String[] titles = shelf.getAllBookTitles();
+        
+        System.out.println("Titles: ====================");
+        for (String s : titles) {
+            System.out.println(s);
+        }
+    }
+    
+    private void listbooks(String book){
+        String[] titles = shelf.getBookTitlesByKeyword(book);
+        
+        System.out.println("Titles: ====================");
+        for (String s : titles) {
+            System.out.println(s);
+        }
     }
 }
 
