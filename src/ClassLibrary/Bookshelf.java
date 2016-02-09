@@ -14,8 +14,8 @@ public final class Bookshelf {
     // Private class fields
     private int numElements;
     private Book header;
-    private final String windowsBookDirectory = "src\\books";
-    private final String linuxBookDirectory = "books";
+    private final String WINDOWS_BOOK_DIRECTORY = "src\\books";
+    private final String LINUX_BOOK_DIRECTORY = "books";
     private String OSName;
 
     // Class constructor
@@ -65,9 +65,9 @@ public final class Bookshelf {
     public void inventoryBooks() {
         String fileDirectory;
         if (this.OSName.equals("Win")) {
-            fileDirectory = this.windowsBookDirectory;
+            fileDirectory = this.WINDOWS_BOOK_DIRECTORY;
         } else {
-            fileDirectory = this.linuxBookDirectory;
+            fileDirectory = this.LINUX_BOOK_DIRECTORY;
         }
         if (new File(fileDirectory).isDirectory()) {
             File dir = new File(fileDirectory);
@@ -87,6 +87,29 @@ public final class Bookshelf {
                 // directories.
             }
         }
+    }
+    
+    public String[] pullBook(String book){
+        String[] temp = new String[3];
+        Book curr = header.next;
+        while (curr != header) {
+            if (book.contains(curr.getTitle())){
+                temp[0] = curr.getTitle();
+                temp[1] = curr.getAuthor();
+                if (this.OSName.equals("Win")){
+                    temp[3] = WINDOWS_BOOK_DIRECTORY + curr.getFileName();
+                    break;
+                }
+                else{
+                    temp[3] = LINUX_BOOK_DIRECTORY + curr.getFileName();
+                    break;
+                }               
+            }
+            
+            curr = curr.next;
+        }
+        
+        return temp;
     }
 
     private boolean addBook(String titl, String auth, String fn) {
@@ -140,9 +163,9 @@ public final class Bookshelf {
         File bookFile;
         BufferedReader fileIn;
         if (this.OSName.equals("Win")) {
-            bookFile = new File(this.windowsBookDirectory + "\\" + fn);
+            bookFile = new File(this.WINDOWS_BOOK_DIRECTORY + "\\" + fn);
         } else {
-            bookFile = new File(this.linuxBookDirectory + "/" + fn);
+            bookFile = new File(this.LINUX_BOOK_DIRECTORY + "/" + fn);
         }
         if (bookFile.isFile()) {
             try {
