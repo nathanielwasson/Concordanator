@@ -12,36 +12,14 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author zeroxff
+ * @author Cory Sabol
  */
 public class Main {
     
     public static void main(String[] args) {
-//        Bookshelf myBooks = new Bookshelf();
-//        System.out.println("The number of books are: " + myBooks.getNumberOfBooks());
-//        String[] bookTitle = myBooks.getAllBookTitles();
-//        for (String bookTitle1 : bookTitle) {
-//            System.out.println(bookTitle1);
-//        }
-//        Scanner search = new Scanner(System.in);
-//        System.out.print("Please enter a search term: ");
-//        String searchTerm = search.nextLine();
-//        String[] bookTitleBySearch = myBooks.getBookTitlesByKeyword(searchTerm);
-//        for (String bookTitleBySearch1 : bookTitleBySearch) {
-//            System.out.println(bookTitleBySearch1);
-//        }
         
         // Start the repl from here
         CmdRepl repl = new CmdRepl();
-        
-        // Test out get all book titles
-        Bookshelf shelf = new Bookshelf();
-        String[] titles = shelf.getAllBookTitles();
-        
-        System.out.println("Titles: ====================");
-        for (String s : titles) {
-            System.out.println(s);
-        }
         
         try {
             

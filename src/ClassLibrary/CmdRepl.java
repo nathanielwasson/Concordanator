@@ -28,8 +28,13 @@ public class CmdRepl implements Serializable {
     private Bookshelf shelf;
     
     private enum Commands {
-    load, help, listbooks, listcons, invalid, exit;
-}
+        load, 
+        help, 
+        listbooks, 
+        listcons, 
+        invalid, 
+        exit;
+    }
     
     /***
      * Constuctor for the repl.
@@ -76,21 +81,18 @@ public class CmdRepl implements Serializable {
             phrase <phrase>
          */
         
-        System.out.println("Welcome to Concordanator, the best darn concordance tool around ;^/)/n");
+        System.out.println("Welcome to Concordanator, "
+                + "the best darn concordance tool around ;^)\n"
+                + "type help for list of commands.");
         // Main repl loop.
         do {
             
             System.out.print(this.prompt);
             cmdStr = in.readLine();            
             // Tokenize the command entered.
-            ArrayList<String> cmd = tokenizeCmd(cmdStr, " ");
-            
-            System.out.println("Commands");
-            for (String c : cmd) {
-                System.out.println(c);
-            }
+            ArrayList<String> cmd = tokenizeCmd(cmdStr, " ");        
             evalCmd(cmd);
-            
+    
         } while (!exit);
     }
     
@@ -119,25 +121,26 @@ public class CmdRepl implements Serializable {
         if (cmd.size() > 1) {
             cmdArg = cmd.subList(1, cmd.size());
         }
-        System.out.println("Command Arg: " + cmdArg.toString());
+        //System.out.println("Command Arg: " + cmdArg.toString());
         try {
-        command = Commands.valueOf(cmd.get(0));
+            command = Commands.valueOf(cmd.get(0));
         }
         catch(IllegalArgumentException e){
-            
+            // Handle this exception
         }
         switch (command) {
             case load :
                 // Find the text in here.
                 break;
             case help :
-                // handle 
+                this.printHelp();
                 break;
             case listbooks :
-                if (cmdArg.toString().equals("[]")){
-                this.listbooks();
-                }else {
-                   this.listbooks(cmdArg.toString().substring(1, cmdArg.toString().length() - 1));
+                if (cmdArg.toString().equals("[]")) {
+                    this.listbooks();
+                } else {
+                    this.listbooks(cmdArg.toString().substring(1, 
+                            cmdArg.toString().length() - 1));
                 }
                 break;
             case listcons :
@@ -183,7 +186,7 @@ public class CmdRepl implements Serializable {
         throw new UnsupportedOperationException();
     }
     
-    private void listbooks(){
+    private void listbooks() {
         String[] titles = shelf.getAllBookTitles();
         
         System.out.println("Titles: ====================");
@@ -192,13 +195,31 @@ public class CmdRepl implements Serializable {
         }
     }
     
-    private void listbooks(String book){
+    private void listbooks(String book) {
         String[] titles = shelf.getBookTitlesByKeyword(book);
         
         System.out.println("Titles: ====================");
         for (String s : titles) {
             System.out.println(s);
         }
+    }
+    
+    /**
+     * Show the help text
+     * Can make help text a file for ease of change in the future.
+     */
+    private void printHelp() {
+        String helpTxt = "Available commmands: \n"
+                + "load <title | path> - load a concordance or create one and load it.\n"
+                + "help - show this help.\n"
+                + "listbooks [keyword] - list all books matching keyword.\n"
+                + "listcons [keyword]- list concordances matching keyword.\n"
+                + "search <keyword> - find occurrences of keyword in loaded concordance.\n"
+                + "numoccur <keyword> - find number of occurrences of keyword in loaded concordance.\n"
+                + "numlines <title> - return the number of lines in the file.\n"
+                + "phrase <phrase> - find occurrences of phrase in loaded concordance.\n";
+        
+        System.out.println(helpTxt);
     }
 }
 
