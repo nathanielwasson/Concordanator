@@ -84,6 +84,7 @@ public class CmdRepl implements Serializable {
         System.out.println("Welcome to Concordanator, "
                 + "the best darn concordance tool around ;^)\n"
                 + "type help for list of commands.");
+        System.out.println("User dir " + System.getProperty("user.dir"));
         // Main repl loop.
         do {
             

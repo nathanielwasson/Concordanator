@@ -22,6 +22,8 @@ public class Main {
         // Start the repl from here
         CmdRepl repl = new CmdRepl();
         
+        System.out.println("User dir " + System.getProperty("user.dir"));
+        
         try {
             
             if (args.length != 0 && args[1].equals("gui")) {
