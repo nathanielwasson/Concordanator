@@ -87,7 +87,7 @@ public class CmdRepl implements Serializable {
         
         System.out.println("Welcome to Concordanator, "
                 + "the best darn concordance tool around ;^)\n"
-                + "type help for list of commands.");
+                + "type help for list of commands.\n");
         // Main repl loop.
         do {
             
@@ -224,15 +224,15 @@ public class CmdRepl implements Serializable {
      * Can make help text a file for ease of change in the future.
      */
     private void printHelp() {
-        String helpTxt = "Available commmands: \n"
-                + "load <title | path> - load a concordance or create one and load it.\n"
-                + "help - show this help.\n"
-                + "listbooks [keyword] - list all books matching keyword.\n"
-                + "listcons [keyword]- list concordances matching keyword.\n"
-                + "search <keyword> - find occurrences of keyword in loaded concordance.\n"
-                + "numoccur <keyword> - find number of occurrences of keyword in loaded concordance.\n"
-                + "numlines <title> - return the number of lines in the file.\n"
-                + "phrase <phrase> - find occurrences of phrase in loaded concordance.\n";
+        String helpTxt = "Available commmands: \n\n"
+                + "load <title | path>     - load a concordance or create one and load it.\n"
+                + "help                    - show this help.\n"
+                + "listbooks [keyword]     - list all books matching keyword.\n"
+                + "listcons [keyword]      - list concordances matching keyword.\n"
+                + "search <keyword>        - find occurrences of keyword in loaded concordance.\n"
+                + "numoccur <keyword>      - find number of occurrences of keyword in loaded concordance.\n"
+                + "numlines <title>        - return the number of lines in the file.\n"
+                + "phrase <phrase>         - find occurrences of phrase in loaded concordance.\n";
         
         System.out.println(helpTxt);
     }
