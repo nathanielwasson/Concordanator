@@ -24,6 +24,7 @@ public class Concordance implements Serializable {
         this.bookAuthor = a;
         this.filePath = fn;
         this.wordCount = 0;
+        this.makeConcordance();
     }
     
     public boolean makeConcordance(){
