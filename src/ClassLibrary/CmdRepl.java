@@ -9,6 +9,8 @@ import java.io.*;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -26,12 +28,14 @@ public class CmdRepl implements Serializable {
     private String cmdStr;
     private boolean conLoaded;
     private Bookshelf shelf;
-    
+    private Concordance concord;
+  
     private enum Commands {
         load, 
         help, 
         listbooks, 
-        listcons, 
+        listcons,
+        build,
         invalid, 
         exit;
     }
@@ -116,7 +120,7 @@ public class CmdRepl implements Serializable {
     
     private void evalCmd(ArrayList<String> cmd) {
         List<String> cmdArg = new ArrayList<String>();
-        Commands command = Commands.valueOf("invalid");
+        Commands command;
         
         if (cmd.size() > 1) {
             cmdArg = cmd.subList(1, cmd.size());
@@ -126,7 +130,7 @@ public class CmdRepl implements Serializable {
             command = Commands.valueOf(cmd.get(0));
         }
         catch(IllegalArgumentException e){
-            // Handle this exception
+            command = Commands.valueOf("invalid");
         }
         switch (command) {
             case load :
@@ -146,6 +150,9 @@ public class CmdRepl implements Serializable {
             case listcons :
                 // handle
                 break; 
+            case build :
+                this.buildConcordance(cmdArg.toString().substring(1, cmdArg.toString().length() - 1));
+                break;
             case exit :
                 this.exit = true;
                 break;
@@ -202,6 +209,13 @@ public class CmdRepl implements Serializable {
         for (String s : titles) {
             System.out.println(s);
         }
+    }
+    
+        private void buildConcordance(String title) {
+            title = title.replace(",", "");
+            String[] bookInformation = shelf.pullBook(title);
+            this.concord = new Concordance(bookInformation[0], bookInformation[1], bookInformation[2]);
+
     }
     
     /**
