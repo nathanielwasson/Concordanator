@@ -193,8 +193,8 @@ public final class Bookshelf {
                             temp[0] = line.substring(7, line.length());
                             parts++;
                         }
-                        if (line.substring(0, 8).contains("Author:")) {
-                            temp[1] = line.substring(8, line.length());
+                        if (line.substring(0, 7).contains("Author:")) {
+                            temp[1] = line.substring(7, line.length());
                             parts++;
                         }
                     }
