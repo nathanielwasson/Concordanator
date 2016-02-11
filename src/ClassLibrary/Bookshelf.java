@@ -16,7 +16,7 @@ public final class Bookshelf {
     private Book header;
     private final String WINDOWS_BOOK_DIRECTORY = "src\\books";
     private final String LINUX_BOOK_DIRECTORY = "src/books";
-    private String userDir = System.getProperty("user.dir");
+    private final String userDir;
     private String OSName;
     private String fileDirectory;
 
@@ -25,11 +25,11 @@ public final class Bookshelf {
         this.header = new Book();  // Creates empty node for header.
         this.numElements = 0;
         this.OSName = System.getProperty("os.name").substring(0, 3);
-        
+        this.userDir = System.getProperty("user.dir");
         if (this.OSName.equals("Win")) {
-            fileDirectory = userDir + "//" + this.WINDOWS_BOOK_DIRECTORY;
+            fileDirectory = userDir + File.separator + this.WINDOWS_BOOK_DIRECTORY;
         } else {
-            fileDirectory = userDir + "/" + this.LINUX_BOOK_DIRECTORY;
+            fileDirectory = userDir + File.separator + this.LINUX_BOOK_DIRECTORY;
         }
         
         System.out.println(fileDirectory);
@@ -54,8 +54,6 @@ public final class Bookshelf {
         String[] temp2 = new String[index];
         System.arraycopy(temp, 0, temp2, 0, index);
         
-         System.out.println("User directory" + this.userDir);
-        
         return temp2;
     }
 
@@ -77,13 +75,7 @@ public final class Bookshelf {
     }
 
     public void inventoryBooks() {
-        /*String fileDirectory;
-        if (this.OSName.equals("Win")) {
-            fileDirectory = userDir + "\\" + this.WINDOWS_BOOK_DIRECTORY;
-        } else {
-            fileDirectory = userDir + "/" + this.LINUX_BOOK_DIRECTORY;
-        }*/
-        System.out.println("book dir " + fileDirectory);
+
         if (new File(fileDirectory).isDirectory()) {
             File dir = new File(fileDirectory);
             File[] directoryListing = dir.listFiles();
@@ -194,7 +186,7 @@ public final class Bookshelf {
                             parts++;
                         }
                         if (line.substring(0, 7).contains("Author:")) {
-                            temp[1] = line.substring(7, line.length());
+                            temp[1] = line.substring(8, line.length());
                             parts++;
                         }
                     }
