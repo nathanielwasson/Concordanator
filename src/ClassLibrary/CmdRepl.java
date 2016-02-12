@@ -28,10 +28,12 @@ public class CmdRepl implements Serializable {
     private String cmdStr;
     private boolean conLoaded;
     private Bookshelf shelf;
-    private Concordance concord;
+    private Concord concord;
     private String OSName = System.getProperty("os.name").substring(0, 3);
     private String userDir;
     private String conDir;
+    private String booksDir;
+    private boolean isWin;
   
     private enum Commands {
         load, 
@@ -63,8 +65,12 @@ public class CmdRepl implements Serializable {
        
        if (this.OSName.equals("Win")) {
            this.conDir = this.userDir + "\\cons";
+           this.booksDir = this.userDir + "\\cons";
+           this.isWin = true;
        } else {
            this.conDir = this.userDir + "/cons";
+           this.booksDir = this.userDir + "/cons";
+           this.isWin = false;
        }
        
        System.out.println("Con dir: " + this.conDir);
@@ -135,7 +141,7 @@ public class CmdRepl implements Serializable {
         if (cmd.size() > 1) {
             cmdArg = cmd.subList(1, cmd.size());
         }
-        //System.out.println("Command Arg: " + cmdArg.toString());
+        System.out.println("Command Arg: " + cmdArg.toString());
         try {
             command = Commands.valueOf(cmd.get(0));
         }
@@ -144,7 +150,27 @@ public class CmdRepl implements Serializable {
         }
         switch (command) {
             case load :
-                // Find the text in here.
+                String title = "";
+                String textPath = "";
+                for (String s : cmdArg) {
+                    title = title + s + " ";
+                }
+                System.out.println(title);
+                if (isWin) 
+                    textPath = this.booksDir + "\\" + title + ".con";
+                else
+                    textPath = this.booksDir + "/" + title + ".con";
+                
+                // Now we call load with the textPath
+                this.concord = this.loadConcordance(textPath);
+                
+                if (this.concord != null) {
+                    System.out.println(title + " loaded.");
+                    this.conLoaded = true;
+                } else {
+                    System.out.println(title + " failed to load, are you sure it exists?");
+                    this.conLoaded = false;
+                }
                 break;
             case help :
                 this.printHelp();
@@ -161,8 +187,8 @@ public class CmdRepl implements Serializable {
                 
                 break; 
             case build :
-                this.buildConcordance(cmdArg.toString()
-                        .substring(1, cmdArg.toString().length() - 1));
+                //this.buildConcordance(cmdArg.toString()
+                //        .substring(1, cmdArg.toString().length() - 1));
                 break;
             case search :
                 if (!conLoaded) {
@@ -200,12 +226,26 @@ public class CmdRepl implements Serializable {
         }
     }
     
+    /**
+     * 
+     * @param c - Concord object to be saved
+     * @param conPath - The path to which to save the concordance
+     *                  must also have the file name appended to it
+     */
+    public void saveConcordance(Concord c, String conPath) {
+        IO io = new IO();
+        
+        io.serialize(c, conPath);
+    }
+    
     /***
      * 
      * @param conPath The path or the name of the concordance to load.
      */
-    public void loadConcordance(String conPath) {
+    public Concord loadConcordance(String conPath) {
+        IO io = new IO();
         
+        return (Concord) io.deserialize(conPath);
     }
     
     /***
@@ -246,12 +286,11 @@ public class CmdRepl implements Serializable {
         }
     }
     
-        private void buildConcordance(String title) {
-            title = title.replace(",", "");
-            String[] bookInformation = shelf.pullBook(title);
-            this.concord = new Concordance(bookInformation[0], bookInformation[1], bookInformation[2]);
-
-    }
+    /*private void buildConcordance(String title) {
+        title = title.replace(",", "");
+        String[] bookInformation = shelf.pullBook(title);
+        this.concord = new Concord(bookInformation[0], bookInformation[1], bookInformation[2]);
+    }*/
     
     /**
      * Show the help text
