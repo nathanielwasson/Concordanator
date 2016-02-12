@@ -32,7 +32,7 @@ public final class Bookshelf {
             fileDirectory = userDir + File.separator + this.LINUX_BOOK_DIRECTORY;
         }
         
-        System.out.println(fileDirectory);
+        //System.out.println(fileDirectory);
         
         this.inventoryBooks();
     }
