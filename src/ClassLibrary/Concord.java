@@ -1,5 +1,3 @@
-package ClassLibrary;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +15,7 @@ import java.util.Set;
  * @param number_of_lines number of lines in the file
  * @author seth
  */
-public class Concord{
+public class Concord implements Serializable{
     int number_of_lines;
     String file_name;
     String[] file_lines, flat_words;
@@ -30,26 +28,39 @@ public class Concord{
     ArrayList<String> common_words = new ArrayList<String>();
     
   
-    
+    /**
+     * 
+     * @param file_name name of the file to make the concordance from
+     * @param number_of_lines the number of lines in the file
+     * @throws IOException 
+     */
     public Concord(String file_name) throws IOException{
         this.file_name = file_name;
         this.number_of_lines = get_number_lines();
         this.file_lines = this.get_file_lines();
         this.file_words = this.get_file_words();
         this.flat_words_full = Arrays.toString(this.file_lines);
-        this.flat_words = flat_words_full.split("[\\s.,;\\n\\t]");
+        this.flat_words = flat_words_full.split("[\\s--.,;\\n\\t]");
         this.unique_words = this.get_unique_words();
-        this.concord = this.get_concord();
         this.all_apperances = this.get_all_apperances();
         this.apperance_ranks = this.get_apperance_ranks();
+        this.concord = this.get_concord();
         this.common_words = this.get_common_words();
+        this.save();
     }
     
-    public class Word{
+    public class Word implements Serializable{
         String word;
         ArrayList<Integer> list_lines;
         int number_occurances, number_lines, apperance_rank;
         
+        /**
+         * 
+         * @param w String containing the word itself
+         * @param ll Arraylist of line numbers word's found on
+         * @param no Number of occurances for the word
+         * @param a  Apperance rank of the word
+         */
         public Word(String w, ArrayList<Integer> ll, int no, int a){
             this.word = w;
             this.list_lines = ll;
@@ -59,6 +70,11 @@ public class Concord{
         }
     }
     
+    /**
+     * returns the number of lines in the text file
+     * @return number of lines in file
+     * @throws IOException 
+     */
     public int get_number_lines() throws IOException{
         LineNumberReader lnr = new LineNumberReader( new FileReader( new File(this.file_name)));
         lnr.skip(Long.MAX_VALUE);
@@ -66,9 +82,13 @@ public class Concord{
         lnr.close();
         return number_of_lines;
     }
-    /*
-        Parses the .txt file and writes each line to an array file_lines
-    */
+    
+    /**
+     * Parses the .txt file and writes each line to an array file_lines
+     * @return String array containing all lines in file as one long string
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
     public String[] get_file_lines() throws FileNotFoundException, IOException {
                
             //open file
@@ -84,20 +104,30 @@ public class Concord{
         return file_lines;
     }
     
-    public HashMap<String, Word> get_concord() {
+    /**
+     * Makes a Word object for each unique word in the text and writes it to a hash table
+     * @return hashmap containing the concordance
+     * @throws IOException 
+     */
+    public HashMap<String, Word> get_concord() throws IOException {
         HashMap<String, Word> concord = new HashMap<String, Word>();
         for(String word: this.unique_words){
             ArrayList<Integer> lines = this.get_list_lines(word);
-            int num_occurances = this.get_number_occurances(word);
-            int app_rank = this.get_apperance_rank(word);
+            int num_occurances = this.all_apperances.get(word);
+            int app_rank = this.apperance_ranks.get(word);
             Word tword = new Word(word, lines, num_occurances, app_rank);
             concord.put(word, tword);
         }
         return concord;
     }
-
+    
+    /**
+     * Creates a concordance excluding all words in commonwords.txt
+     * @return hashmap containing the concordance
+     */
     public HashMap<String, Word> get_concord_nocommon() {
         HashMap<String, Word> concord = new HashMap<String, Word>();
+        //exclude all words in the common words file
         for(String word: this.unique_words){
             if (!(this.common_words.contains(word))){
                 ArrayList<Integer> lines = this.get_list_lines(word);
@@ -110,17 +140,26 @@ public class Concord{
         return concord;
     }
     
+    /**
+     * Gets an arraylist with number_of_lines worth's of elements, each containing
+     * an arraylist with each word on the line in order
+     * @return Arraylist of each word on each line
+     */
     public ArrayList[] get_file_words() {
         ArrayList[] file_words = new ArrayList[this.number_of_lines];
         
+        //for each line in the file
         for (int i = 0; i < this.number_of_lines; i++) {
             String file_line = file_lines[i];
             if (file_line != null) {
+                //split each string line of the file
                 String[] split_file_line = file_line.split("[\\s.,;:?!--()'\"\\n\\t]");
                 file_words[i] = new ArrayList<String>();
+                //add each word to it's respective list
                 for (int j = 0; j < split_file_line.length; j++) {
                     if(file_words[i] != null){
-                    file_words[i].add(split_file_line[j].toLowerCase());
+                        //make sure words are all lowercase
+                        file_words[i].add(split_file_line[j].toLowerCase());
                     }
                 }
             }
@@ -129,10 +168,17 @@ public class Concord{
         return file_words;
     }
 
+    /**
+     * Gets an arraylist of all of the unique words in the text
+     * @return arraylist of all of the unique words in the text
+     */
+    //Gets an arraylist of all of the unique words in the text
     public ArrayList<String> get_unique_words() {
         ArrayList<String> unique_words = new ArrayList<String>();
+        //for line in file
         for (int i = 0; i < this.file_words.length; i++) {
             if (file_words[i]!=null){
+                //for word in line
                 for (int j = 0; j < file_words[i].size(); j++) {
                     if (!(unique_words.contains((String) file_words[i].get(j)))){
                         unique_words.add((String) file_words[i].get(j));
@@ -143,6 +189,11 @@ public class Concord{
         return unique_words;
     }
     
+    /**
+     * Gets a list of all the line numbers a word appears on
+     * @param target_word
+     * @return list of all the line numbers a word appears on
+     */
     public ArrayList<Integer> get_list_lines(String target_word){
         ArrayList<Integer> list_lines = new ArrayList<Integer>();
         int counter = 1;
@@ -159,10 +210,21 @@ public class Concord{
         return list_lines;
     }
  
+    /**
+     * Gets total number of lines that a word appears on
+     * @param target_word
+     * @return 
+     */
+    //Gets the number of lines that a word appears on
     public int get_number_lines(String target_word){
         return this.get_list_lines(target_word).size();
     }
     
+    /**
+     *Gets the total number of occurances for given word 
+     * @param target_word
+     * @return integer number of occurances for the given word
+     */
     public int get_number_occurances(String target_word){
         int counter = 0;
         for(ArrayList<String> str: this.file_words){
@@ -176,29 +238,51 @@ public class Concord{
         }
         return counter;
     }
-    /***
+    
+    /**
+     * Gets number of apperances for each unique word and writes to a hash table
      * @return Hashmap mapping every unique word in text to it's number of apperances
      */
     public HashMap<String, Integer> get_all_apperances(){
         HashMap<String, Integer> all_apperances = new HashMap<String, Integer>();
-        int index = 0;
         for(String word: this.unique_words){
             all_apperances.put(word, this.get_number_occurances(word)); 
         }
         return all_apperances;
     }
     
+    /**
+     * gets a words apperance rank within the text file
+     * @param target_word
+     * @return 
+     */
     public int get_apperance_rank(String target_word){
-        int num_apperances = this.get_number_occurances(target_word);
+        //get list of apperances for all words
+        int[] apperance_numbers = new int[this.all_apperances.size()];
+        int index = 0;
+        for(String word: this.all_apperances.keySet()){
+            apperance_numbers[index] = this.all_apperances.get(word);     
+            index++;
+        }
+        
+        //get the number of apperances for the target word
+        int target_num = this.get_number_occurances(target_word);
+        
         int rank = 1;
-        for (String word: this.all_apperances.keySet()){
-            if (this.get_number_occurances(word) > num_apperances){
-                rank++;
+        
+        //check target num against all numbers in list and return number greater than
+        for (int i = 0; i < apperance_numbers.length; i++) {
+            if (apperance_numbers[i] > target_num){
+                rank = rank + 1;
             }
         }
         return rank;
     }
     
+    /**
+     * gets a hash map of all of the apperance ranks for each word in file
+     * @return hash map of all apperance ranks for each unique word in text
+     */
     public HashMap<String, Integer> get_apperance_ranks(){
         HashMap<String, Integer> apperance_ranks = new HashMap<String, Integer>();
         for(String word: this.unique_words){
@@ -207,6 +291,15 @@ public class Concord{
         return apperance_ranks;
     }
     
+    /**
+     * parses commonwords.txt and returns an arraylist containing all the words
+     * that should be excluded from the concord
+     * @return arraylist containing all the words that should be excluded from the concord
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
+    //parses commonwords.txt and returns an arraylist containing all the words
+    //that should be excluded from the concord
     public ArrayList<String> get_common_words() throws FileNotFoundException, IOException{
             ArrayList<String> common_words = new ArrayList<String>();
             
@@ -219,5 +312,82 @@ public class Concord{
                 common_words.add(line);
             }
             return common_words;
+    }
+
+    /**
+     * Get's all the words within some given distance of all occurances of a target_word
+     * @param target_word 
+     * @param dist
+     * @return ArrayList of all of the words in the file that are 
+     * found within the given distance of the target word
+     */
+    public ArrayList<String> get_words_within_distance(String target_word, int dist){
+        ArrayList<String> words = new ArrayList<String>();
+        
+        //for word in array of flat words (leaving off 'dist' worth of space on both ends)
+        for(int i=dist; i < this.flat_words.length-dist; i++){
+            if (this.flat_words[i].equals(target_word)){
+                //add all words within distance on either side to arraylist
+                for(int j=i-dist; j <= i+dist; j++){
+                    //exclude the target word
+                    if(i!=j && !words.contains(this.flat_words[j])){
+                        words.add(this.flat_words[j]);
+                    }
+                }
+            }
+        }
+        return words;
+    }
+    
+    /**
+     * saves the seralized concord to filename.con
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
+    public void save() throws FileNotFoundException, IOException{
+        String name = this.file_name.split("[.]")[0] + ".con";
+        FileOutputStream fileOut = new FileOutputStream(name);
+        ObjectOutputStream out = new ObjectOutputStream(fileOut);
+        out.writeObject(this);
+        out.close();
+        fileOut.close();
+    }
+    /**
+     * 
+     * @param phrase
+     * @return ArrayList of lines containing line numbers of phrase occurances
+     */
+    public ArrayList<Integer> find_phrase(String phrase){
+        ArrayList<Integer> phrase_lines = new ArrayList<Integer>();
+        
+        //if phrase not found in file, return empty arraylist
+        if (!this.flat_words_full.contains(phrase)){
+            return phrase_lines;
+        }
+        
+        //get words in phrase
+        String[] words = phrase.split("[\\s.,;\\n\\t]");
+        
+        //get line numbers for each word in phrase
+        for (int i = 0; i < words.length; i++) {
+            phrase_lines.add(this.get_number_lines(words[i]));
+        }
+        
+        //find numbers within tolerance
+        phrase_lines.get(0);
+        
+        //lines that completely contain phrase
+        ArrayList<Integer> full_phrase_lines = new ArrayList<Integer>();
+        
+        //parse this.file_lines and see what lines contain whole phrase
+        for(int line = 0; line < this.file_lines.length; line++){
+            if(this.file_lines[line] != null){
+                if(this.file_lines[line].contains(phrase) && !full_phrase_lines.contains(line+1)){
+                    full_phrase_lines.add(line+1);
+                }
+            }
+        }
+        
+        return full_phrase_lines;
     }
 }
