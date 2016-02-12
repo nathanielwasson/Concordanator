@@ -27,7 +27,6 @@ public class BookshelfTest {
     
     public BookshelfTest() {
         
-        System.out.println(this.userDir + "/" + this.nixPath);
         this.path = this.userDir + "\\" + this.winPath;
         // Create the list of titles to be expected
            

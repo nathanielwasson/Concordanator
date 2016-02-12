@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class IO<T> implements Serializable {
     
     private T obj;
-    private String OSName = System.getProperty("os.name");
+    private String OSName = System.getProperty("os.name").substring(0, 3);
     private String path;
     
     /**
@@ -54,11 +54,11 @@ public class IO<T> implements Serializable {
             in.close();
             
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return this.obj;
