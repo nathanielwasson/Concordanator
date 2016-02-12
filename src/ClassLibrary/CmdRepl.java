@@ -29,6 +29,7 @@ public class CmdRepl implements Serializable {
     private boolean conLoaded;
     private Bookshelf shelf;
     private Concordance concord;
+    private String OSName = System.getProperty("os.name").substring(0, 3);
     private String userDir;
     private String conDir;
   
@@ -60,9 +61,13 @@ public class CmdRepl implements Serializable {
        
        this.userDir = System.getProperty("user.dir");
        
-       // Get the path to the serialized concordances
-       System.out.println(userDir);
-       //this.conDir = 
+       if (this.OSName.equals("Win")) {
+           this.conDir = this.userDir + "\\cons";
+       } else {
+           this.conDir = this.userDir + "/cons";
+       }
+       
+       System.out.println("Con dir: " + this.conDir);
     }
     
     /***
@@ -153,7 +158,7 @@ public class CmdRepl implements Serializable {
                 }
                 break;
             case listcons :
-                // handle
+                
                 break; 
             case build :
                 this.buildConcordance(cmdArg.toString()

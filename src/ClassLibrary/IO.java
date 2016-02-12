@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class IO<T> implements Serializable {
     
     private T obj;
-    private String OSName = System.getProperty("os.name");
+    private String OSName = System.getProperty("os.name").substring(0, 3);
     private String path;
     
     /**
