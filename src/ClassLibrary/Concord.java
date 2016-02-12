@@ -21,10 +21,10 @@ public class Concord implements Serializable{
     String[] file_lines, flat_words;
     ArrayList[] file_words;
     HashMap<String, Word> concord = new HashMap<String, Word>();
-    HashMap<String, Integer> all_apperances = new HashMap<String, Integer>();
+    HashMap<String, Integer> all_appearances = new HashMap<String, Integer>();
     ArrayList<String> unique_words;
     String flat_words_full;
-    HashMap<String, Integer> apperance_ranks = new HashMap<String, Integer>();
+    HashMap<String, Integer> appearance_ranks = new HashMap<String, Integer>();
     ArrayList<String> common_words = new ArrayList<String>();
     
   
@@ -42,8 +42,8 @@ public class Concord implements Serializable{
         this.flat_words_full = Arrays.toString(this.file_lines);
         this.flat_words = flat_words_full.split("[\\s--.,;\\n\\t]");
         this.unique_words = this.get_unique_words();
-        this.all_apperances = this.get_all_apperances();
-        this.apperance_ranks = this.get_apperance_ranks();
+        this.all_appearances = this.get_all_appearances();
+        this.appearance_ranks = this.get_appearance_ranks();
         this.concord = this.get_concord();
         this.common_words = this.get_common_words();
         this.save();
@@ -52,21 +52,21 @@ public class Concord implements Serializable{
     public class Word implements Serializable{
         String word;
         ArrayList<Integer> list_lines;
-        int number_occurances, number_lines, apperance_rank;
+        int number_occurrences, number_lines, appearance_rank;
         
         /**
          * 
          * @param w String containing the word itself
          * @param ll Arraylist of line numbers word's found on
-         * @param no Number of occurances for the word
-         * @param a  Apperance rank of the word
+         * @param no Number of occurrences for the word
+         * @param a  Appearance rank of the word
          */
         public Word(String w, ArrayList<Integer> ll, int no, int a){
             this.word = w;
             this.list_lines = ll;
             this.number_lines = this.list_lines.size();
-            this.number_occurances = no;
-            this.apperance_rank = a;
+            this.number_occurrences = no;
+            this.appearance_rank = a;
         }
     }
     
@@ -113,9 +113,9 @@ public class Concord implements Serializable{
         HashMap<String, Word> concord = new HashMap<String, Word>();
         for(String word: this.unique_words){
             ArrayList<Integer> lines = this.get_list_lines(word);
-            int num_occurances = this.all_apperances.get(word);
-            int app_rank = this.apperance_ranks.get(word);
-            Word tword = new Word(word, lines, num_occurances, app_rank);
+            int num_occurrences = this.all_appearances.get(word);
+            int app_rank = this.appearance_ranks.get(word);
+            Word tword = new Word(word, lines, num_occurrences, app_rank);
             concord.put(word, tword);
         }
         return concord;
@@ -131,9 +131,9 @@ public class Concord implements Serializable{
         for(String word: this.unique_words){
             if (!(this.common_words.contains(word))){
                 ArrayList<Integer> lines = this.get_list_lines(word);
-                int num_occurances = this.get_number_occurances(word);
-                int app_rank = this.get_apperance_rank(word);
-                Word tword = new Word(word, lines, num_occurances, app_rank);
+                int num_occurrences = this.get_number_occurrences(word);
+                int app_rank = this.get_appearance_rank(word);
+                Word tword = new Word(word, lines, num_occurrences, app_rank);
                 concord.put(word, tword);
             }
         }
@@ -221,11 +221,11 @@ public class Concord implements Serializable{
     }
     
     /**
-     *Gets the total number of occurances for given word 
+     *Gets the total number of occurrences for given word 
      * @param target_word
-     * @return integer number of occurances for the given word
+     * @return integer number of occurrences for the given word
      */
-    public int get_number_occurances(String target_word){
+    public int get_number_occurrences(String target_word){
         int counter = 0;
         for(ArrayList<String> str: this.file_words){
             if (str!=null){
@@ -240,39 +240,39 @@ public class Concord implements Serializable{
     }
     
     /**
-     * Gets number of apperances for each unique word and writes to a hash table
-     * @return Hashmap mapping every unique word in text to it's number of apperances
+     * Gets number of appearances for each unique word and writes to a hash table
+     * @return Hashmap mapping every unique word in text to it's number of appearances
      */
-    public HashMap<String, Integer> get_all_apperances(){
-        HashMap<String, Integer> all_apperances = new HashMap<String, Integer>();
+    public HashMap<String, Integer> get_all_appearances(){
+        HashMap<String, Integer> all_appearances = new HashMap<String, Integer>();
         for(String word: this.unique_words){
-            all_apperances.put(word, this.get_number_occurances(word)); 
+            all_appearances.put(word, this.get_number_occurrences(word)); 
         }
-        return all_apperances;
+        return all_appearances;
     }
     
     /**
-     * gets a words apperance rank within the text file
+     * gets a words appearance rank within the text file
      * @param target_word
      * @return 
      */
-    public int get_apperance_rank(String target_word){
-        //get list of apperances for all words
-        int[] apperance_numbers = new int[this.all_apperances.size()];
+    public int get_appearance_rank(String target_word){
+        //get list of appearances for all words
+        int[] appearance_numbers = new int[this.all_appearances.size()];
         int index = 0;
-        for(String word: this.all_apperances.keySet()){
-            apperance_numbers[index] = this.all_apperances.get(word);     
+        for(String word: this.all_appearances.keySet()){
+            appearance_numbers[index] = this.all_appearances.get(word);     
             index++;
         }
         
-        //get the number of apperances for the target word
-        int target_num = this.get_number_occurances(target_word);
+        //get the number of appearances for the target word
+        int target_num = this.get_number_occurrences(target_word);
         
         int rank = 1;
         
         //check target num against all numbers in list and return number greater than
-        for (int i = 0; i < apperance_numbers.length; i++) {
-            if (apperance_numbers[i] > target_num){
+        for (int i = 0; i < appearance_numbers.length; i++) {
+            if (appearance_numbers[i] > target_num){
                 rank = rank + 1;
             }
         }
@@ -280,15 +280,15 @@ public class Concord implements Serializable{
     }
     
     /**
-     * gets a hash map of all of the apperance ranks for each word in file
-     * @return hash map of all apperance ranks for each unique word in text
+     * gets a hash map of all of the appearance ranks for each word in file
+     * @return hash map of all appearance ranks for each unique word in text
      */
-    public HashMap<String, Integer> get_apperance_ranks(){
-        HashMap<String, Integer> apperance_ranks = new HashMap<String, Integer>();
+    public HashMap<String, Integer> get_appearance_ranks(){
+        HashMap<String, Integer> appearance_ranks = new HashMap<String, Integer>();
         for(String word: this.unique_words){
-            apperance_ranks.put(word, this.get_apperance_rank(word));
+            appearance_ranks.put(word, this.get_appearance_rank(word));
         }
-        return apperance_ranks;
+        return appearance_ranks;
     }
     
     /**
@@ -315,7 +315,7 @@ public class Concord implements Serializable{
     }
 
     /**
-     * Get's all the words within some given distance of all occurances of a target_word
+     * Get's all the words within some given distance of all occurrences of a target_word
      * @param target_word 
      * @param dist
      * @return ArrayList of all of the words in the file that are 
@@ -355,7 +355,7 @@ public class Concord implements Serializable{
     /**
      * 
      * @param phrase
-     * @return ArrayList of lines containing line numbers of phrase occurances
+     * @return ArrayList of lines containing line numbers of phrase occurrences
      */
     public ArrayList<Integer> find_phrase(String phrase){
         ArrayList<Integer> phrase_lines = new ArrayList<Integer>();
