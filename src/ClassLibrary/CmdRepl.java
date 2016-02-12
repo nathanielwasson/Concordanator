@@ -29,6 +29,8 @@ public class CmdRepl implements Serializable {
     private boolean conLoaded;
     private Bookshelf shelf;
     private Concordance concord;
+    private String userDir;
+    private String conDir;
   
     private enum Commands {
         load, 
@@ -36,6 +38,10 @@ public class CmdRepl implements Serializable {
         listbooks, 
         listcons,
         build,
+        search,
+        numoccur,
+        numlines,
+        phrase,
         invalid, 
         exit;
     }
@@ -52,12 +58,11 @@ public class CmdRepl implements Serializable {
        this.conLoaded = false;
        this.shelf = new Bookshelf();
        
-//       for (String arg : args) {
-//           if (arg.equals("gui")) {
-//              // Launch gui from here.
-//           }
-//           // Otherwise do continue and do nothing
-//       }
+       this.userDir = System.getProperty("user.dir");
+       
+       // Get the path to the serialized concordances
+       System.out.println(userDir);
+       //this.conDir = 
     }
     
     /***
@@ -154,15 +159,39 @@ public class CmdRepl implements Serializable {
                 this.buildConcordance(cmdArg.toString()
                         .substring(1, cmdArg.toString().length() - 1));
                 break;
+            case search :
+                if (!conLoaded) {
+                    System.out.println("Error: no concordance loaded.");
+                } else {
+                    
+                }
+                break;
+            case numoccur :
+                if (!conLoaded) {
+                    System.out.println("Error: no concordance loaded.");
+                } else {
+                    
+                }
+                break;
+            case numlines :
+                if (!conLoaded) {
+                    System.out.println("Error: no concordance loaded.");
+                } else {
+                    
+                }
+                break;
+            case phrase :
+                if (!conLoaded) {
+                    System.out.println("Error: no concordance loaded.");
+                } else {
+                    
+                }
+                break;
             case exit :
                 this.exit = true;
                 break;
             case invalid :
                 System.out.println("Invalid command.  Type 'help' for list of commands.");
-        }
-        
-        if (conLoaded) {
-            // Allow checks for the commands that require 
         }
     }
     
@@ -171,7 +200,7 @@ public class CmdRepl implements Serializable {
      * @param conPath The path or the name of the concordance to load.
      */
     public void loadConcordance(String conPath) {
-        throw new UnsupportedOperationException();
+        
     }
     
     /***
