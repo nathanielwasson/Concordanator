@@ -28,7 +28,7 @@ public class CmdRepl implements Serializable {
     private String cmdStr;
     private boolean conLoaded;
     private Bookshelf shelf;
-    private Concord concord;
+    private Concordance concord;
     private String OSName = System.getProperty("os.name").substring(0, 3);
     private String userDir;
     private String conDir;
@@ -155,12 +155,13 @@ public class CmdRepl implements Serializable {
                 for (String s : cmdArg) {
                     title = title + s + " ";
                 }
+                title = title.substring(0, title.length() - 1);
                 System.out.println(title);
                 if (isWin) 
                     textPath = this.booksDir + "\\" + title + ".con";
                 else
                     textPath = this.booksDir + "/" + title + ".con";
-                
+                System.out.println(textPath);
                 // Now we call load with the textPath
                 this.concord = this.loadConcordance(textPath);
                 
@@ -242,10 +243,10 @@ public class CmdRepl implements Serializable {
      * 
      * @param conPath The path or the name of the concordance to load.
      */
-    public Concord loadConcordance(String conPath) {
+    public Concordance loadConcordance(String conPath) {
         IO io = new IO();
         
-        return (Concord) io.deserialize(conPath);
+        return (Concordance) io.deserialize(conPath);
     }
     
     /***
@@ -286,11 +287,12 @@ public class CmdRepl implements Serializable {
         }
     }
     
-    /*private void buildConcordance(String title) {
+    private void buildConcordance(String title) {
         title = title.replace(",", "");
         String[] bookInformation = shelf.pullBook(title);
-        this.concord = new Concord(bookInformation[0], bookInformation[1], bookInformation[2]);
-    }*/
+        this.concord = new Concordance(bookInformation[0], 
+                bookInformation[1], bookInformation[2]);
+    }
     
     /**
      * Show the help text
