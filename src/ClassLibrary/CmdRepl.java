@@ -28,7 +28,12 @@ public class CmdRepl implements Serializable {
     private String cmdStr;
     private boolean conLoaded;
     private Bookshelf shelf;
-    private Concordance concord;
+    private Concord concord;
+    private String OSName = System.getProperty("os.name").substring(0, 3);
+    private String userDir;
+    private String conDir;
+    private String booksDir;
+    private boolean isWin;
   
     private enum Commands {
         load, 
@@ -36,6 +41,10 @@ public class CmdRepl implements Serializable {
         listbooks, 
         listcons,
         build,
+        search,
+        numoccur,
+        numlines,
+        phrase,
         invalid, 
         exit;
     }
@@ -52,12 +61,19 @@ public class CmdRepl implements Serializable {
        this.conLoaded = false;
        this.shelf = new Bookshelf();
        
-//       for (String arg : args) {
-//           if (arg.equals("gui")) {
-//              // Launch gui from here.
-//           }
-//           // Otherwise do continue and do nothing
-//       }
+       this.userDir = System.getProperty("user.dir");
+       
+       if (this.OSName.equals("Win")) {
+           this.conDir = this.userDir + "\\cons";
+           this.booksDir = this.userDir + "\\cons";
+           this.isWin = true;
+       } else {
+           this.conDir = this.userDir + "/cons";
+           this.booksDir = this.userDir + "/cons";
+           this.isWin = false;
+       }
+       
+       System.out.println("Con dir: " + this.conDir);
     }
     
     /***
@@ -87,7 +103,7 @@ public class CmdRepl implements Serializable {
         
         System.out.println("Welcome to Concordanator, "
                 + "the best darn concordance tool around ;^)\n"
-                + "type help for list of commands.");
+                + "type help for list of commands.\n");
         // Main repl loop.
         do {
             
@@ -125,7 +141,7 @@ public class CmdRepl implements Serializable {
         if (cmd.size() > 1) {
             cmdArg = cmd.subList(1, cmd.size());
         }
-        //System.out.println("Command Arg: " + cmdArg.toString());
+        System.out.println("Command Arg: " + cmdArg.toString());
         try {
             command = Commands.valueOf(cmd.get(0));
         }
@@ -134,7 +150,35 @@ public class CmdRepl implements Serializable {
         }
         switch (command) {
             case load :
-                // Find the text in here.
+                String title = "";
+                String textPath = "";
+                for (String s : cmdArg) {
+                    title = title + s + " ";
+                }
+                
+                if (!title.isEmpty()) {
+                    title = title.substring(0, title.length() - 1);
+                    System.out.println(title);
+                } else {
+                    System.out.println("Please provide a book name to load.");
+                    break;
+                }
+                
+                if (isWin) 
+                    textPath = this.booksDir + "\\" + title + ".con";
+                else
+                    textPath = this.booksDir + "/" + title + ".con";
+                System.out.println(textPath);
+                // Now we call load with the textPath
+                this.concord = this.loadConcordance(textPath);
+                
+                if (this.concord != null) {
+                    System.out.println(title + " loaded.");
+                    this.conLoaded = true;
+                } else {
+                    System.out.println(title + " failed to load, are you sure it exists?");
+                    this.conLoaded = false;
+                }
                 break;
             case help :
                 this.printHelp();
@@ -148,10 +192,39 @@ public class CmdRepl implements Serializable {
                 }
                 break;
             case listcons :
-                // handle
+                
                 break; 
             case build :
-                this.buildConcordance(cmdArg.toString().substring(1, cmdArg.toString().length() - 1));
+                this.buildConcordance(cmdArg.toString()
+                        .substring(1, cmdArg.toString().length() - 1));
+                break;
+            case search :
+                if (!conLoaded) {
+                    System.out.println("Error: no concordance loaded.");
+                } else {
+                    
+                }
+                break;
+            case numoccur :
+                if (!conLoaded) {
+                    System.out.println("Error: no concordance loaded.");
+                } else {
+                    
+                }
+                break;
+            case numlines :
+                if (!conLoaded) {
+                    System.out.println("Error: no concordance loaded.");
+                } else {
+                    
+                }
+                break;
+            case phrase :
+                if (!conLoaded) {
+                    System.out.println("Error: no concordance loaded.");
+                } else {
+                    
+                }
                 break;
             case exit :
                 this.exit = true;
@@ -159,18 +232,28 @@ public class CmdRepl implements Serializable {
             case invalid :
                 System.out.println("Invalid command.  Type 'help' for list of commands.");
         }
+    }
+    
+    /**
+     * 
+     * @param c - Concord object to be saved
+     * @param conPath - The path to which to save the concordance
+     *                  must also have the file name appended to it
+     */
+    public void saveConcordance(Concord c, String conPath) {
+        IO io = new IO();
         
-        if (conLoaded) {
-            // Allow checks for the commands that require 
-        }
+        io.serialize(c, conPath);
     }
     
     /***
      * 
      * @param conPath The path or the name of the concordance to load.
      */
-    public void loadConcordance(String conPath) {
-        throw new UnsupportedOperationException();
+    public Concord loadConcordance(String conPath) {
+        IO io = new IO();
+        
+        return (Concord) io.deserialize(conPath);
     }
     
     /***
@@ -211,11 +294,15 @@ public class CmdRepl implements Serializable {
         }
     }
     
-        private void buildConcordance(String title) {
-            title = title.replace(",", "");
-            String[] bookInformation = shelf.pullBook(title);
-            this.concord = new Concordance(bookInformation[0], bookInformation[1], bookInformation[2]);
-
+    private void buildConcordance(String title) {
+        title = title.replace(",", "");
+        String[] bookInformation = shelf.pullBook(title);
+        try {
+            this.concord = new Concord(bookInformation[2]);
+        } catch (IOException ex) {
+            System.out.println("File Error:  The file is not found on the system.");
+        }
+        
     }
     
     /**
@@ -223,17 +310,16 @@ public class CmdRepl implements Serializable {
      * Can make help text a file for ease of change in the future.
      */
     private void printHelp() {
-        String helpTxt = "Available commmands: \n"
-                + "load <title | path> - load a concordance or create one and load it.\n"
-                + "help - show this help.\n"
-                + "listbooks [keyword] - list all books matching keyword.\n"
-                + "listcons [keyword]- list concordances matching keyword.\n"
-                + "search <keyword> - find occurrences of keyword in loaded concordance.\n"
-                + "numoccur <keyword> - find number of occurrences of keyword in loaded concordance.\n"
-                + "numlines <title> - return the number of lines in the file.\n"
-                + "phrase <phrase> - find occurrences of phrase in loaded concordance.\n";
+        String helpTxt = "Available commmands: \n\n"
+                + "load <title | path>     - load a concordance or create one and load it.\n"
+                + "help                    - show this help.\n"
+                + "listbooks [keyword]     - list all books matching keyword.\n"
+                + "listcons [keyword]      - list concordances matching keyword.\n"
+                + "search <keyword>        - find occurrences of keyword in loaded concordance.\n"
+                + "numoccur <keyword>      - find number of occurrences of keyword in loaded concordance.\n"
+                + "numlines <title>        - return the number of lines in the file.\n"
+                + "phrase <phrase>         - find occurrences of phrase in loaded concordance.\n";
         
         System.out.println(helpTxt);
     }
 }
-
