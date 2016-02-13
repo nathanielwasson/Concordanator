@@ -195,8 +195,8 @@ public class CmdRepl implements Serializable {
                 
                 break; 
             case build :
-                //this.buildConcordance(cmdArg.toString()
-                //        .substring(1, cmdArg.toString().length() - 1));
+                this.buildConcordance(cmdArg.toString()
+                        .substring(1, cmdArg.toString().length() - 1));
                 break;
             case search :
                 if (!conLoaded) {
@@ -299,6 +299,7 @@ public class CmdRepl implements Serializable {
         String[] bookInformation = shelf.pullBook(title);
         this.concord = new Concordance(bookInformation[0], 
                 bookInformation[1], bookInformation[2]);
+        
     }
     
     /**

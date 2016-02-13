@@ -6,6 +6,7 @@
 package ClassLibrary;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,6 +28,20 @@ public class IO<T> implements Serializable {
      */
     public void serialize(T obj, String path) {
         this.obj = obj;
+
+		// Check if the path already exists
+		// If not then create it.
+		File f; 
+			
+		if (this.OSName.equals("Win"))
+			f = new File(path.substring(0, path.lastIndexOf('\\')));
+		else
+			f = new File(path.substring(0, path.lastIndexOf('/')));
+
+		if (!f.exists()) {
+			// create it
+			f.mkdir();
+		}
         
         try {
             FileOutputStream fileOut = new FileOutputStream(path);
@@ -35,7 +50,7 @@ public class IO<T> implements Serializable {
             fileOut.close();
             out.close();
         } catch (Exception ex) {
-            Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(IO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
