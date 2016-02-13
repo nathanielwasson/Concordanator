@@ -16,7 +16,7 @@ public class Concordance implements Serializable {
     // private class fields.
     LinkedList[] hastable;
     String bookTitle, bookAuthor, filePath;
-    int wordCount;
+    int wordCount, lineCount;
     
     public Concordance(String bt, String a, String fn) {
         this.hastable = new LinkedList[27];
@@ -24,6 +24,7 @@ public class Concordance implements Serializable {
         this.bookAuthor = a;
         this.filePath = fn;
         this.wordCount = 0;
+        this.lineCount = 0;
         this.makeConcordance();
     }
     
