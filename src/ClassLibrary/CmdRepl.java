@@ -155,8 +155,15 @@ public class CmdRepl implements Serializable {
                 for (String s : cmdArg) {
                     title = title + s + " ";
                 }
-                title = title.substring(0, title.length() - 1);
-                System.out.println(title);
+                
+                if (!title.isEmpty()) {
+                    title = title.substring(0, title.length() - 1);
+                    System.out.println(title);
+                } else {
+                    System.out.println("Please provide a book name to load.");
+                    break;
+                }
+                
                 if (isWin) 
                     textPath = this.booksDir + "\\" + title + ".con";
                 else
