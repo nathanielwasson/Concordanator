@@ -5,7 +5,7 @@
  */
 package ClassLibrary;
 
-import java.io.*;
+import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -20,10 +20,23 @@ import static org.junit.Assert.*;
 public class BookshelfTest {
     
     private static String OS = System.getProperty("os.name").toLowerCase();
+    private String userDir = System.getProperty("user.dir");
     private String winPath = "src\\books";
-    private String nixPath = "src//books";
+    private String nixPath = "src/books";
+    private String path;
     
     public BookshelfTest() {
+        
+        this.path = this.userDir + "\\" + this.winPath;
+        // Create the list of titles to be expected
+           
+        if (isNix()) {
+            // Adhere to *nix paths
+            this.path = this.userDir + "/" + this.nixPath;            
+        }
+        
+        //System.out.println("path to books" + this.path);
+        
     }
     
     public static boolean isWindows() {
@@ -40,7 +53,9 @@ public class BookshelfTest {
 
     public static boolean isNix() {
 
-	return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 );
+	return (OS.indexOf("nix") >= 0 
+                || OS.indexOf("nux") >= 0 
+                || OS.indexOf("aix") > 0 );
 		
     }
     
@@ -79,19 +94,10 @@ public class BookshelfTest {
      */
     @Test
     public void testGetAllBookTitles() {
-        System.out.println("getAllBookTitles");
+        System.out.println("getAllBookTitles\n " + this.path);
         Bookshelf instance = new Bookshelf();
-        
-        // Create the list of titles to be expected
-        File folder = null;
-        
-        if (isWindows()) {
-            // Adhere to windows paths
-            folder = new File(winPath);
-        } else if (isNix()) {
-            // Adhere to *nix paths
-            folder = new File(nixPath);            
-        }
+       
+        File folder = new File(this.path);
         
         // get the files in books dir
         File[] files = folder.listFiles();
@@ -111,8 +117,6 @@ public class BookshelfTest {
                 
         String[] result = instance.getAllBookTitles();
         assertArrayEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
     }
 
     /**
@@ -126,8 +130,6 @@ public class BookshelfTest {
         String[] expResult = null;
         String[] result = instance.getBookTitlesByKeyword(keyword);
         assertArrayEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -138,8 +140,19 @@ public class BookshelfTest {
         System.out.println("inventoryBooks");
         Bookshelf instance = new Bookshelf();
         instance.inventoryBooks();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of pullBook method, of class Bookshelf.
+     */
+    @Test
+    public void testPullBook() {
+        System.out.println("pullBook");
+        String book = "";
+        Bookshelf instance = new Bookshelf();
+        String[] expResult = null;
+        String[] result = instance.pullBook(book);
+        assertArrayEquals(expResult, result);
     }
     
 }
