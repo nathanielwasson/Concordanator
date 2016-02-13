@@ -21,6 +21,11 @@ Seth Askew
 
 Now you should have a working netbeans project. Git actions will need to be made from the repo dir.
 
+### Building from the command line with javac
+1. `cd` into the root dir of the project.
+2. execute java -cp build Main
+3. that's it.
+
 
 #### General Todo:
 1. Document all the things.
