@@ -209,14 +209,24 @@ public class CmdRepl implements Serializable {
                 if (!conLoaded) {
                     System.out.println("Error: no concordance loaded.");
                 } else {
-                    
+                     if (cmdArg.toString().equals("[]")) {
+                         System.out.println("Incorrect Usage: Number of word occurences requires an argument.");
+                } else {
+                    this.numOccurences(cmdArg.toString().substring(1, 
+                            cmdArg.toString().length() - 1));
+                }
                 }
                 break;
             case numlines :
                 if (!conLoaded) {
                     System.out.println("Error: no concordance loaded.");
                 } else {
-                    
+                 if (cmdArg.toString().equals("[]")) {
+                         System.out.println("Incorrect Usage: Number of lines requires an argument.");
+                } else {
+                    this.numberOfLines(cmdArg.toString().substring(1, 
+                            cmdArg.toString().length() - 1));
+                }
                 }
                 break;
             case phrase :
@@ -299,10 +309,23 @@ public class CmdRepl implements Serializable {
         String[] bookInformation = shelf.pullBook(title);
         try {
             this.concord = new Concord(bookInformation[2]);
+            this.conLoaded = true;
         } catch (IOException ex) {
             System.out.println("File Error:  The file is not found on the system.");
         }
         
+    }
+    
+    private void numOccurences (String word){
+        int temp = concord.get_number_occurrences(word);
+        System.out.println("The word " + word + " appears " + temp + " times.");
+        
+        
+    }
+    
+    private void numberOfLines(String word){
+        int temp = concord.get_number_lines(word);
+        System.out.println("The word " + word + " appears on " + temp + " lines.");
     }
     
     /**
