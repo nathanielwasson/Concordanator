@@ -301,7 +301,7 @@ public class Concord implements Serializable{
      * @return 
      */
     //Gets the number of lines that a word appears on
-    private int get_number_lines(String target_word){
+    public int get_number_lines(String target_word){
         return this.get_list_lines(target_word).size();
     }
     
@@ -310,7 +310,7 @@ public class Concord implements Serializable{
      * @param target_word
      * @return integer number of occurrences for the given word
      */
-    private int get_number_occurrences(String target_word){
+    public int get_number_occurrences(String target_word){
         int counter = 0;
         for(ArrayList<String> str: this.file_words){
             if (str!=null){
