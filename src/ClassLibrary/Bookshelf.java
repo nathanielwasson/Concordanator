@@ -14,32 +14,22 @@ public final class Bookshelf {
     // Private class fields
     private int numElements;
     private Book header;
-    private final String WINDOWS_BOOK_DIRECTORY = "src\\books";
-    private final String LINUX_BOOK_DIRECTORY = "src/books";
+    private final String BOOK_DIRECTORY = "src" + File.separator + "books";
     private final String userDir;
-    private String OSName;
-    private String fileDirectory;
+    private String bookDirectory;
 
     // Class constructor
     public Bookshelf() {
         this.header = new Book();  // Creates empty node for header.
         this.numElements = 0;
-        this.OSName = System.getProperty("os.name").substring(0, 3);
         this.userDir = System.getProperty("user.dir");
-        if (this.OSName.equals("Win")) {
-            fileDirectory = userDir + File.separator + this.WINDOWS_BOOK_DIRECTORY;
-        } else {
-            fileDirectory = userDir + File.separator + this.LINUX_BOOK_DIRECTORY;
-        }
-        
-        System.out.println(fileDirectory);
-        
+        this.bookDirectory = this.userDir + File.separator + BOOK_DIRECTORY;
         this.inventoryBooks();
     }
 
     // Class methods
     public int getNumberOfBooks() {
-        return numElements;
+        return this.numElements;
     }
 
     public String[] getAllBookTitles() {
@@ -76,8 +66,8 @@ public final class Bookshelf {
 
     public void inventoryBooks() {
 
-        if (new File(fileDirectory).isDirectory()) {
-            File dir = new File(fileDirectory);
+        if (new File(this.bookDirectory).isDirectory()) {
+            File dir = new File(this.bookDirectory);
             File[] directoryListing = dir.listFiles();
             if (directoryListing != null) {
                 for (File child : directoryListing) {
@@ -104,17 +94,8 @@ public final class Bookshelf {
                 temp = new String[3];
                 temp[0] = curr.getTitle();
                 temp[1] = curr.getAuthor();
-                temp[2] = fileDirectory + File.separator + curr.getFileName();
-                curr = header;
-                /*
-                if (this.OSName.equals("Win")){
-                    temp[2] = fileDirectory + "\\" + curr.getFileName();
-                    break;
-                }
-                else{
-                    temp[2] = fileDirectory + "/" + curr.getFileName();
-                    break;
-                } */              
+                temp[2] = this.bookDirectory + File.separator + curr.getFileName();
+                curr = header;              
             } else {
                curr = curr.next; 
             }     
@@ -172,11 +153,7 @@ public final class Bookshelf {
         String[] temp = new String[2];
         File bookFile;
         BufferedReader fileIn;
-        if (this.OSName.equals("Win")) {
-            bookFile = new File(fileDirectory + "\\" + fn);
-        } else {
-            bookFile = new File(fileDirectory + "/" + fn);
-        }
+        bookFile = new File(this.bookDirectory + File.separator + fn);
         if (bookFile.isFile()) {
             try {
                 fileIn = new BufferedReader(new FileReader(bookFile));
