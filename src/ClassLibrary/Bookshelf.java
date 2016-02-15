@@ -97,12 +97,16 @@ public final class Bookshelf {
     }
     
     public String[] pullBook(String book){
-        String[] temp = new String[3];
+        String[] temp = null;
         Book curr = header.next;
         while (curr != header) {
             if (book.contains(curr.getTitle())){
+                temp = new String[3];
                 temp[0] = curr.getTitle();
                 temp[1] = curr.getAuthor();
+                temp[2] = fileDirectory + File.separator + curr.getFileName();
+                curr = header;
+                /*
                 if (this.OSName.equals("Win")){
                     temp[2] = fileDirectory + "\\" + curr.getFileName();
                     break;
@@ -110,10 +114,10 @@ public final class Bookshelf {
                 else{
                     temp[2] = fileDirectory + "/" + curr.getFileName();
                     break;
-                }               
-            }
-            
-            curr = curr.next;
+                } */              
+            } else {
+               curr = curr.next; 
+            }     
         }
         
         return temp;
@@ -123,7 +127,6 @@ public final class Bookshelf {
         boolean success = false;
         Book curr = header.next;  // Create a pointer named curr.
         Book add = new Book(titl, auth, fn);   // Create a DNode with the data.
-
         // if the list is empty, then just insert the item as the first item in the list.
         if (curr == header) {
             // Just attach the newly created node to the header.
