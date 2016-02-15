@@ -30,28 +30,29 @@ public class Concord implements Serializable{
      */
     public Concord(String file_name) throws IOException{
         this.file_name = file_name;
-        System.out.println("Stage 1: Setting number of lines.");
+        //System.out.println("Stage 1: Setting number of lines.");
         this.number_of_lines = set_number_lines();
-        System.out.println("Stage 2: Setting file lines.");
+        //System.out.println("Stage 2: Setting file lines.");
         this.file_lines = this.set_file_lines();
-        System.out.println("Stage 3: Setting file words.");
+        //System.out.println("Stage 3: Setting file words.");
         this.file_words = this.set_file_words();
-        System.out.println("Stage 4: Changing all words to lowercase.");
+        System.out.print("\r|=        |");
         this.flat_words_full = Arrays.toString(this.file_lines).toLowerCase();
-        System.out.println("Stage 5: Removing all unwanted characters.");
+        System.out.print("\r|==       |");
         this.flat_words = flat_words_full.split("[\\s--.,;\\n\\t]");
-        System.out.println("Stage 6: Determining unique words.");
+        System.out.print("\r|===      |");
         this.unique_words = this.set_unique_words();
-        System.out.println("Stage 7: Setting all appearances of a word.");
+        System.out.print("\r|====     |");
         this.all_appearances = this.set_all_appearances();
-        System.out.println("Stage 8: Rank ordering words.");
+        System.out.print("\r|=====    |");
         this.appearance_ranks = this.set_appearance_ranks();
-        System.out.println("Stage 9: Setting the concordance.");
+        System.out.print("\r|======   |");
         this.concord = this.set_concord();
-        System.out.println("Stage 10: Removing the most common words.");
+        System.out.print("\r|=======  |");
         //this.common_words = this.set_common_words();
-        System.out.println("Stage 11: Saving the concordance.");
+        System.out.print("\r|======== |");
         this.save();
+        System.out.print("\r|=========|\nConcordance Built.\n");
     }
     
     public class Word implements Serializable{
