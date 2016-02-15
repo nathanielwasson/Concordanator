@@ -307,13 +307,16 @@ public class CmdRepl implements Serializable {
     private void buildConcordance(String title) {
         title = title.replace(",", "");
         String[] bookInformation = shelf.pullBook(title);
-        try {
+        if (bookInformation == null){
+            System.out.println("Error: Book not found. Please check the name and try again.");
+        } else {
+           try {
             this.concord = new Concord(bookInformation[2]);
             this.conLoaded = true;
         } catch (IOException ex) {
             System.out.println("File Error:  The file is not found on the system.");
-        }
-        
+        } 
+        } 
     }
     
     private void numOccurences (String word){
