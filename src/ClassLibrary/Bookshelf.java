@@ -9,6 +9,13 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * The Bookshelf object emulates a virtual bookshelf containing Books 
+ * acquired from the project Gutenberg web site.  This class will
+ * attempt to locate books within a specific directory entitled 'books'
+ * located one level outside of this class.
+ * @author Anthony Ratliff
+ */
 public final class Bookshelf {
 
     // Private class fields
@@ -19,7 +26,14 @@ public final class Bookshelf {
     private String bookDirectory;
 
     // Class constructor
-    public Bookshelf() {
+
+    /**
+     * Public class constructor which takes no arguments and builds
+     * a virtual bookshelf from text files acquired from the project
+     * Gutenberg web site.  The text files must be in the books folder
+     * and contain the project Gutenberg disclaimer.
+     */
+        public Bookshelf() {
         this.header = new Book();  // Creates empty node for header.
         this.numElements = 0;
         this.userDir = System.getProperty("user.dir");
@@ -28,10 +42,21 @@ public final class Bookshelf {
     }
 
     // Class methods
-    public int getNumberOfBooks() {
+
+    /**
+     * Method returns the number of books on the bookshelf.
+     * @return
+     */
+        public int getNumberOfBooks() {
         return this.numElements;
     }
 
+    /**
+     * Method will return a string array consisting of all books found in
+     * the 'books' directory containing the project Gutenberg disclaimer.
+     * The strings in the array will list books by title and author.
+     * @return
+     */
     public String[] getAllBookTitles() {
         String temp[] = new String[this.numElements];
         int index = 0;
@@ -47,6 +72,14 @@ public final class Bookshelf {
         return temp2;
     }
 
+    /**
+     * Method will return a string array consisting of all books found on
+     * the shelf based on a keyword search string.  The books must be located in
+     * the 'books' directory and contain the project Gutenberg disclaimer.
+     * The strings in the array will list books by title and author.
+     * @param keyword
+     * @return
+     */
     public String[] getBookTitlesByKeyword(String keyword) {
         String[] temp = new String[this.numElements];
         int index = 0;
@@ -64,6 +97,10 @@ public final class Bookshelf {
         return temp2;
     }
 
+    /**
+     * Method will refresh the Bookshelf to include any new titles added since
+     * the Bookshelf class was first instantiated.
+     */
     public void inventoryBooks() {
 
         if (new File(this.bookDirectory).isDirectory()) {
@@ -86,6 +123,14 @@ public final class Bookshelf {
         }
     }
     
+    /**
+     * Method will return a string array consisting of 3 elements based on 
+     * a keyword search if the book exists. If no book is found, the method
+     * will return null.  The elements of the returned array are: book title, 
+     * book author, and the local path to the book.
+     * @param book
+     * @return
+     */
     public String[] pullBook(String book){
         String[] temp = null;
         Book curr = header.next;
