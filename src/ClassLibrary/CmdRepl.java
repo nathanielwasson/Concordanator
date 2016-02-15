@@ -259,6 +259,7 @@ public class CmdRepl implements Serializable {
     /***
      * 
      * @param conPath The path or the name of the concordance to load.
+     * @return 
      */
     public Concord loadConcordance(String conPath) {
         IO io = new IO();
@@ -271,7 +272,7 @@ public class CmdRepl implements Serializable {
      * @param q
      * @return 
      * 
-     * Should return the string representaion of the results of the search.
+     * Should return the string representation of the results of the search.
      */
     public String searchCon(String q) {
         throw new UnsupportedOperationException();
@@ -311,10 +312,12 @@ public class CmdRepl implements Serializable {
             System.out.println("Error: Book not found. Please check the name and try again.");
         } else {
            try {
+               System.out.println("Building the concordance. This may take a moment for large books.");
             this.concord = new Concord(bookInformation[2]);
             this.conLoaded = true;
+               System.out.println("SUCCESS: The concordance was built and loaded.");
         } catch (IOException ex) {
-            System.out.println("File Error:  The file is not found on the system.");
+            System.out.println("File Error: The file is not found on the system.");
         } 
         } 
     }
@@ -341,10 +344,12 @@ public class CmdRepl implements Serializable {
                 + "help                    - show this help.\n"
                 + "listbooks [keyword]     - list all books matching keyword.\n"
                 + "listcons [keyword]      - list concordances matching keyword.\n"
+                + "build [keyword]         - build a concordance by book title.\n"
                 + "search <keyword>        - find occurrences of keyword in loaded concordance.\n"
                 + "numoccur <keyword>      - find number of occurrences of keyword in loaded concordance.\n"
                 + "numlines <title>        - return the number of lines in the file.\n"
-                + "phrase <phrase>         - find occurrences of phrase in loaded concordance.\n";
+                + "phrase <phrase>         - find occurrences of phrase in loaded concordance.\n"
+                + "exit                    - close Concordanator application.\n";
         
         System.out.println(helpTxt);
     }
