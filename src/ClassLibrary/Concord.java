@@ -36,23 +36,23 @@ public class Concord implements Serializable{
         this.file_lines = this.set_file_lines();
         //System.out.println("Stage 3: Setting file words.");
         this.file_words = this.set_file_words();
-        System.out.print("\r|=        |");
+        System.out.print("\r|=        | Stage 1 of 9");
         this.flat_words_full = Arrays.toString(this.file_lines).toLowerCase();
-        System.out.print("\r|==       |");
+        System.out.print("\r|==       | Stage 2 of 9");
         this.flat_words = flat_words_full.split("[\\s--.,;\\n\\t]");
-        System.out.print("\r|===      |");
+        System.out.print("\r|===      | Stage 3 of 9");
         this.unique_words = this.set_unique_words();
-        System.out.print("\r|====     |");
+        System.out.print("\r|====     | Stage 4 of 9");
         this.all_appearances = this.set_all_appearances();
-        System.out.print("\r|=====    |");
+        System.out.print("\r|=====    | Stage 5 of 9");
         this.appearance_ranks = this.set_appearance_ranks();
-        System.out.print("\r|======   |");
+        System.out.print("\r|======   | Stage 6 of 9");
         this.concord = this.set_concord();
-        System.out.print("\r|=======  |");
+        System.out.print("\r|=======  | Stage 7 of 9");
         //this.common_words = this.set_common_words();
-        System.out.print("\r|======== |");
+        System.out.print("\r|======== | Stage 8 of 9");
         this.save();
-        System.out.print("\r|=========|\nConcordance Built.\n");
+        System.out.print("\r|=========| Stage 9 of 9\n");
     }
     
     public class Word implements Serializable{
