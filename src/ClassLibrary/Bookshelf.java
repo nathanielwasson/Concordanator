@@ -114,7 +114,7 @@ public final class Bookshelf {
             if (directoryListing != null) {
                 for (File child : directoryListing) {
                     // Strip the file extension and chop the file names into a String array using the keyword 'by'
-                    if (child.getName().substring(child.getName().length() - 4).equals(".txt")) {    // Exclude files that do not have a .txt file extention
+                    if (child.getName().substring(child.getName().length() - 4).equals(".txt") && this.isGutenberg(this.bookDirectory + File.separator + child.getName())) {    // Exclude files that do not have a .txt file extention
                         String[] pieces = this.retrieveCredentialsFromFile(child.getName());
                         this.addBook(pieces[0], pieces[1], child.getName());
                     }
@@ -232,6 +232,36 @@ public final class Bookshelf {
         }
 
         return temp;
+    }
+    
+    /*
+        Private class method which recieves a book path and then determines if the book
+        is a memeber of the project Gutenberg library.  Method returns true if so and
+        false otherwise.
+    */
+    private boolean isGutenberg(String bookPath){
+        boolean success = false;    // initialize boolean variable to be returned.
+        File file = new File(bookPath);
+        BufferedReader fileIn;  // create a buffered reader object to browse the text file.
+        if (file.isFile()){ // if the file path passed in is actually a file
+            try {
+                fileIn = new BufferedReader(new FileReader(file));  // create a new buffered file reader object from the file.
+                while (fileIn.ready()){
+                    String line = fileIn.readLine();    // read a line of text.
+                    if (line.contains("*** START OF THIS PROJECT GUTENBERG")) {
+                        // if the text contains the above disclaimer,
+                    success = true; // set the boolean response to true.
+                    break;  // stop reading the book.
+                    }
+                }
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Concordance.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Concordance.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return success; // return the result of the querry.
     }
 
     // Private inner Book class.
