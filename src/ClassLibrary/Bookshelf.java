@@ -257,7 +257,7 @@ public final class Bookshelf {
                 fileIn = new BufferedReader(new FileReader(file));  // create a new buffered file reader object from the file.
                 while (fileIn.ready()){
                     String line = fileIn.readLine();    // read a line of text.
-                    if (line.contains("*** START OF THIS PROJECT GUTENBERG")) {
+                    if (line.contains("PROJECT GUTENBERG")) {
                         // if the text contains the above disclaimer,
                     success = true; // set the boolean response to true.
                     break;  // stop reading the book.
