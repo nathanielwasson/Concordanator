@@ -114,7 +114,8 @@ public final class Bookshelf {
             if (directoryListing != null) {
                 for (File child : directoryListing) {
                     // Strip the file extension and chop the file names into a String array using the keyword 'by'
-                    if (child.getName().substring(child.getName().length() - 4).equals(".txt") && this.isGutenberg(this.bookDirectory + File.separator + child.getName())) {    // Exclude files that do not have a .txt file extention
+                    if (child.getName().substring(child.getName().length() - 4).equals(".txt") && this.isGutenberg(this.bookDirectory + File.separator + child.getName())) {
+                        // only include files which have a .txt file extention and are part of the Gutenberg library.
                         String[] pieces = this.retrieveCredentialsFromFile(child.getName());
                         this.addBook(pieces[0], pieces[1], child.getName());
                     }
@@ -153,7 +154,15 @@ public final class Bookshelf {
         
         return temp;
     }
-
+    
+    
+    /*
+        Private 'addBook' method will accept three string values representing
+        the book title, the book author, and the filename of the text file
+        which contains the book.  A 'Book' object is then created and added 
+        to linked data representing other books.  Method will return 'true' if
+        book was added or false otherwise.
+    */
     private boolean addBook(String titl, String auth, String fn) {
         boolean success = false;
         Book curr = header.next;  // Create a pointer named curr.
@@ -271,7 +280,7 @@ public final class Bookshelf {
         private final String title, author, fileName;
         private Book next, prev;
 
-        // Private class constructor for creating the header
+        // Private class constructor for creating the header.
         private Book() {
             this.title = null;
             this.author = null;
@@ -279,7 +288,7 @@ public final class Bookshelf {
             next = prev = this;
         }
 
-        // Private class constructor
+        // Private class constructor for adding a book.
         private Book(String titl, String auth, String fn) {
             this.title = titl;
             this.author = auth;
