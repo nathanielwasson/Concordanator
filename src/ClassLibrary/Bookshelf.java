@@ -19,11 +19,11 @@ import java.util.logging.Logger;
 public final class Bookshelf {
 
     // Private class fields
-    private int numElements;
-    private Book header;
-    private final String BOOK_DIRECTORY = "src" + File.separator + "books";
-    private final String userDir;
-    private String bookDirectory;
+    private int numElements;    // Holds the number of books on the shelf.
+    private Book header;    // Empty book which servers as a header to the linked data.
+    private final String BOOK_DIRECTORY = "books";  // Name of the folder which contains the books.
+    private final String userDir;   // Current path to which the program is running in.
+    private String bookDirectory;   // Holds the exact path of the book based on the user's OS environment.
 
     // Class constructor
 
@@ -34,11 +34,16 @@ public final class Bookshelf {
      * and contain the project Gutenberg disclaimer.
      */
         public Bookshelf() {
-        this.header = new Book();  // Creates empty node for header.
-        this.numElements = 0;
-        this.userDir = System.getProperty("user.dir");
-        this.bookDirectory = this.userDir + File.separator + BOOK_DIRECTORY;
-        this.inventoryBooks();
+        this.header = new Book();  // Creates empty book for header.
+        this.numElements = 0;   // Initialize the book counter to 0.
+        this.userDir = System.getProperty("user.dir");  // get the program path.
+        this.bookDirectory = this.userDir + File.separator + BOOK_DIRECTORY;    // set the book directory.
+        if (!new File(this.bookDirectory).isDirectory()){
+            // This checks to see if the book directory is present in the command line.
+            // If not, then use is running in Netbeans and the proper folder as be appended.
+            this.bookDirectory = this.userDir + File.separator + "src" + File.separator + "books";
+        }
+        this.inventoryBooks();  // Search the folder for Gutenberg books and add them to the shelf.
     }
 
     // Class methods
