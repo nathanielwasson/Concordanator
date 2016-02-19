@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 public class Concordanator{
     public static void main(String[] args) {
-   // Start the repl from here
+         // Start the repl from here
         CmdRepl repl = new CmdRepl();
         
         try {
@@ -22,5 +22,6 @@ public class Concordanator{
         } catch (IOException ex) {
             Logger.getLogger(Concordanator.class.getName()).log(Level.SEVERE, null, ex);
         }
-}
+    }
+    
 }
