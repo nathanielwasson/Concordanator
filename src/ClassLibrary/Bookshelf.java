@@ -1,9 +1,11 @@
 package ClassLibrary;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,10 +86,10 @@ public final class Bookshelf {
             File dir = new File(this.bookDirectory);
             File[] directoryListing = dir.listFiles();
             if (directoryListing != null) {
-                for (int i = 0; i < directoryListing.length; i++) {
-                    String tempPath = directoryListing[i].getAbsolutePath().substring(directoryListing[i].getAbsolutePath().length() - 4);
+                for (File directoryListing1 : directoryListing) {
+                    String tempPath = directoryListing1.getAbsolutePath().substring(directoryListing1.getAbsolutePath().length() - 4);
                     if (tempPath.equals(".con")) {
-                        temp[index] = directoryListing[i].getName();
+                        temp[index] = directoryListing1.getName();
                         index++;
                     }
                 }
@@ -153,6 +155,31 @@ public final class Bookshelf {
                 // directories.
             }
         }
+    }
+    
+    public boolean addNewBook(String filePath){
+        boolean success = false;
+        if (new File(filePath).isFile() && this.isGutenberg(filePath)){
+            File source = new File(filePath);
+            File destination = new File(this.bookDirectory + File.separator + source.getName());
+            try {
+                BufferedReader fileIn = new BufferedReader(new FileReader(source));
+                BufferedWriter fileOut = new BufferedWriter(new FileWriter(destination));
+                while (fileIn.ready()){
+                    fileOut.write(fileIn.readLine());
+                }
+                fileIn.close();
+                fileOut.close();
+                this.inventoryBooks();
+                success = true;
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Bookshelf.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Bookshelf.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return success;
     }
 
     /**
