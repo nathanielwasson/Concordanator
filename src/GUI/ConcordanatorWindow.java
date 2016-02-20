@@ -4,8 +4,18 @@
  * and open the template in the editor.
  */
 package GUI;
+
 import ClassLibrary.Bookshelf;
 import ClassLibrary.Concord;
+import java.awt.Desktop;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 
 /**
  *
@@ -19,8 +29,8 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
     public ConcordanatorWindow() {
         this.shelf = new Bookshelf();
         initComponents();
-        //populateGUI();
-        
+        populateGUI();
+
     }
 
     /**
@@ -44,6 +54,8 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
         concordancePanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         concordList = new javax.swing.JList();
+        jLabel1 = new javax.swing.JLabel();
+        countLabel = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -51,14 +63,18 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("The Concordanator");
 
-        booksList = new javax.swing.JList(shelf.getAllBookTitles());
+        booksList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
         jScrollPane1.setViewportView(booksList);
 
         javax.swing.GroupLayout booksPanelLayout = new javax.swing.GroupLayout(booksPanel);
         booksPanel.setLayout(booksPanelLayout);
         booksPanelLayout.setHorizontalGroup(
             booksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
         );
         booksPanelLayout.setVerticalGroup(
             booksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -97,7 +113,7 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
                 .addComponent(jButton3)
                 .addGap(18, 18, 18)
                 .addComponent(jButton4)
-                .addContainerGap(100, Short.MAX_VALUE))
+                .addContainerGap(83, Short.MAX_VALUE))
         );
 
         concordList.setModel(new javax.swing.AbstractListModel() {
@@ -120,23 +136,38 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
             .addComponent(jScrollPane2)
         );
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel1.setText("Current books in the library:");
+
+        countLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+
         javax.swing.GroupLayout outterMostPanelLayout = new javax.swing.GroupLayout(outterMostPanel);
         outterMostPanel.setLayout(outterMostPanelLayout);
         outterMostPanelLayout.setHorizontalGroup(
             outterMostPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(outterMostPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(booksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(buttonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(concordancePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(outterMostPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(outterMostPanelLayout.createSequentialGroup()
+                        .addComponent(booksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(buttonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(concordancePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(outterMostPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(countLabel)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         outterMostPanelLayout.setVerticalGroup(
             outterMostPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(outterMostPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGroup(outterMostPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(countLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(outterMostPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(booksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(buttonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -207,10 +238,12 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JList concordList;
     private javax.swing.JPanel concordancePanel;
+    private javax.swing.JLabel countLabel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -220,9 +253,56 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
     private Bookshelf shelf;
     private Concord concord;
+    DefaultListModel<String> model;
 
     private void populateGUI() {
-        
-        this.booksList = new javax.swing.JList(shelf.getAllBookTitles());
+        model = new DefaultListModel<>();
+        String[] books = shelf.getAllBookTitles();
+        for (String book : books) {
+            model.addElement(book);
+        }
+        booksList.setModel(model);
+        countLabel.setText(Integer.toString(shelf.getNumberOfBooks()));
+        booksList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                JList list = (JList) evt.getSource();
+                if (evt.getClickCount() == 1) {
+
+            // Single-click detected
+                } else if (evt.getClickCount() == 2) {
+
+                    // Double-click detected
+                    doubleClick(list);
+
+                } else if (evt.getClickCount() == 3) {
+
+                    // Triple-click detected
+                    int index = list.locationToIndex(evt.getPoint());
+                }
+            }
+        });
+        //this.booksList = new javax.swing.JList(shelf.getAllBookTitles());
+    }
+
+    private void doubleClick(JList list) {
+        String[] bookCreds = shelf.pullBook(list.getSelectedValue().toString());
+        File file = new File(bookCreds[2]);
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            String cmd;
+            try {
+                cmd = "rundll32 url.dll,FileProtocolHandler " + file.getCanonicalPath();
+                Runtime.getRuntime().exec(cmd);
+            } catch (IOException ex) {
+                Logger.getLogger(ConcordanatorWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } else {
+            try {
+                Desktop.getDesktop().edit(file);
+            } catch (IOException ex) {
+                Logger.getLogger(ConcordanatorWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }
