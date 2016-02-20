@@ -19,31 +19,21 @@ public class IO<T> implements Serializable {
     private String OSName = System.getProperty("os.name").substring(0, 3);
     private String path;
     
+    public IO(String filePath){
+        if (new File(filePath).isFile()) this.path = filePath.substring(0, filePath.length()-4) + ".con";
+    }
+    
     /**
      * 
      * @param obj
      * @param path Path to serialize to including the file name and extension
      *        EX: /tmp/catcher in the rye.con
      */
-    public void serialize(T obj, String path) {
+    public void serialize(T obj) {
         this.obj = obj;
-
-		// Check if the path already exists
-		// If not then create it.
-		File f; 
-			
-		if (this.OSName.equals("Win"))
-			f = new File(path.substring(0, path.lastIndexOf('\\')));
-		else
-			f = new File(path.substring(0, path.lastIndexOf('/')));
-
-		if (!f.exists()) {
-			// create it
-			f.mkdir();
-		}
         
         try {
-            FileOutputStream fileOut = new FileOutputStream(path);
+            FileOutputStream fileOut = new FileOutputStream(this.path);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(this.obj);
             fileOut.close();

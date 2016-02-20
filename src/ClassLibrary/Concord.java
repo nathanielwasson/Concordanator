@@ -435,12 +435,14 @@ public class Concord implements Serializable{
      * @throws IOException 
      */
     public void save() throws FileNotFoundException, IOException{
-        String name = this.file_name.substring(0, this.file_name.length()-4) + ".con";
+        /*String name = this.file_name.substring(0, this.file_name.length()-4) + ".con";
         FileOutputStream fileOut = new FileOutputStream(name);
         ObjectOutputStream out = new ObjectOutputStream(fileOut);
         out.writeObject(this);
         out.close();
-        fileOut.close();
+        fileOut.close();*/
+        IO<Concord> io = new IO<>(this.file_name);
+        io.serialize(this);
     }
     /**
      * Currently only return line numbers that contain the entire phrase,
