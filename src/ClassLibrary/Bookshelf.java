@@ -87,7 +87,7 @@ public final class Bookshelf {
                 for (int i = 0; i < directoryListing.length; i++) {
                     String tempPath = directoryListing[i].getAbsolutePath().substring(directoryListing[i].getAbsolutePath().length() - 4);
                     if (tempPath.equals(".con")) {
-                        temp[index] = directoryListing[i].getAbsolutePath();
+                        temp[index] = directoryListing[i].getName();
                         index++;
                     }
                 }
