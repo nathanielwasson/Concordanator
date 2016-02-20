@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
 
 /**
@@ -47,7 +48,7 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         booksList = new javax.swing.JList();
         buttonPanel = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        newBookButton = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
@@ -63,6 +64,8 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("The Concordanator");
 
+        booksPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
         booksList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
@@ -74,16 +77,21 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
         booksPanel.setLayout(booksPanelLayout);
         booksPanelLayout.setHorizontalGroup(
             booksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
         );
         booksPanelLayout.setVerticalGroup(
             booksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1)
         );
 
-        jButton1.setText("jButton1");
+        newBookButton.setText("Add New Book");
+        newBookButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newBookButtonActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("jButton2");
+        jButton2.setText("Build Concordance");
 
         jButton3.setText("jButton3");
 
@@ -95,18 +103,18 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
             buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(buttonPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
+                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton3)
-                    .addComponent(jButton4))
-                .addContainerGap(17, Short.MAX_VALUE))
+                    .addComponent(jButton4)
+                    .addComponent(newBookButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         buttonPanelLayout.setVerticalGroup(
             buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(buttonPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addComponent(newBookButton)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2)
                 .addGap(18, 18, 18)
@@ -197,6 +205,16 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void newBookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newBookButtonActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        int choice = chooser.showOpenDialog(this);
+        if (choice != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        File chosenFile = chooser.getSelectedFile();
+    }//GEN-LAST:event_newBookButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -239,7 +257,6 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
     private javax.swing.JList concordList;
     private javax.swing.JPanel concordancePanel;
     private javax.swing.JLabel countLabel;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -249,6 +266,7 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton newBookButton;
     private javax.swing.JPanel outterMostPanel;
     // End of variables declaration//GEN-END:variables
     private Bookshelf shelf;
@@ -269,7 +287,7 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
                 JList list = (JList) evt.getSource();
                 if (evt.getClickCount() == 1) {
 
-            // Single-click detected
+                    // Single-click detected
                 } else if (evt.getClickCount() == 2) {
 
                     // Double-click detected

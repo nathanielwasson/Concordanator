@@ -313,7 +313,7 @@ public class CmdRepl implements Serializable {
         } else {
            try {
                System.out.println("Building the concordance. This may take a moment for large books.");
-            this.concord = new Concord(bookInformation[2]);
+            this.concord = new Concord(bookInformation[0], bookInformation[1], bookInformation[2]);
             this.conLoaded = true;
                System.out.println("SUCCESS: The concordance was built and loaded.");
         } catch (IOException ex) {

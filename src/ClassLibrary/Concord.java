@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public class Concord implements Serializable{
     private int number_of_lines;
-    private String file_name,flat_words_full;
+    private String file_name,flat_words_full, book_title, book_author;
     private String[] file_lines, flat_words;
     private ArrayList[] file_words;
     private HashMap<String, Word> concord;
@@ -28,7 +28,9 @@ public class Concord implements Serializable{
      * @param file_name name of the file to make the concordance from
      * @throws IOException 
      */
-    public Concord(String file_name) throws IOException{
+    public Concord(String title, String author, String file_name) throws IOException{
+        this.book_title = title;
+        this.book_author = author;
         this.file_name = file_name;
         //System.out.println("Stage 1: Setting number of lines.");
         this.number_of_lines = set_number_lines();
@@ -433,7 +435,7 @@ public class Concord implements Serializable{
      * @throws IOException 
      */
     public void save() throws FileNotFoundException, IOException{
-        String name = this.file_name.split("[.]")[0] + ".con";
+        String name = this.file_name.substring(0, this.file_name.length()-4) + ".con";
         FileOutputStream fileOut = new FileOutputStream(name);
         ObjectOutputStream out = new ObjectOutputStream(fileOut);
         out.writeObject(this);
