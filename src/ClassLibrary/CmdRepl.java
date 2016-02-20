@@ -192,7 +192,7 @@ public class CmdRepl implements Serializable {
                 }
                 break;
             case listcons :
-                
+                this.listCords();
                 break; 
             case build :
                 this.buildConcordance(cmdArg.toString()
@@ -251,9 +251,9 @@ public class CmdRepl implements Serializable {
      *                  must also have the file name appended to it
      */
     public void saveConcordance(Concord c, String conPath) {
-        IO io = new IO();
+        IO<Concord> io = new IO<>(conPath);
         
-        io.serialize(c, conPath);
+        io.serialize(c);
     }
     
     /***
@@ -262,7 +262,7 @@ public class CmdRepl implements Serializable {
      * @return 
      */
     public Concord loadConcordance(String conPath) {
-        IO io = new IO();
+        IO<Concord> io = new IO<>(conPath);
         
         return (Concord) io.deserialize(conPath);
     }
@@ -301,6 +301,15 @@ public class CmdRepl implements Serializable {
         
         System.out.println("Titles: ====================");
         for (String s : titles) {
+            System.out.println(s);
+        }
+    }
+    
+    private void listCords() {
+        String[] cords = shelf.getAllConcordances();
+        
+        System.out.println("Concordances: ====================");
+        for (String s : cords) {
             System.out.println(s);
         }
     }
