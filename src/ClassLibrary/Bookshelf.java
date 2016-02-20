@@ -167,6 +167,7 @@ public final class Bookshelf {
                 BufferedWriter fileOut = new BufferedWriter(new FileWriter(destination));
                 while (fileIn.ready()){
                     fileOut.write(fileIn.readLine());
+                    fileOut.newLine();
                 }
                 fileIn.close();
                 fileOut.close();
