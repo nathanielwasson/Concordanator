@@ -34,11 +34,12 @@ public class CmdRepl implements Serializable {
     private String conDir;
     private String booksDir;
     private boolean isWin;
-  
+
     private enum Commands {
         load, 
         help, 
-        listbooks, 
+        listbooks,
+        addbook,
         listcons,
         build,
         search,
@@ -194,6 +195,14 @@ public class CmdRepl implements Serializable {
             case listcons :
                 this.listCords();
                 break; 
+            case addbook :
+                if (cmdArg.toString().equals("[]")) {
+                    System.out.println("ERROR: Incorrect usage.  Please provide a path to the book to be added.");
+                } else {
+                    this.addBook(cmdArg.toString().substring(1, 
+                            cmdArg.toString().length() - 1));
+                }
+                break;
             case build :
                 this.buildConcordance(cmdArg.toString()
                         .substring(1, cmdArg.toString().length() - 1));
@@ -341,6 +350,14 @@ public class CmdRepl implements Serializable {
     private void numberOfLines(String word){
         int temp = concord.get_number_lines(word);
         System.out.println("The word " + word + " appears on " + temp + " lines.");
+    }
+    
+        private void addBook(String filePath) {
+        if (shelf.addNewBook(filePath)){
+            System.out.println("SUCCESS:  Book was added to the shelf.");
+        } else {
+            System.out.println("ERROR: The book was not added to the shelf.");
+        }
     }
     
     /**
