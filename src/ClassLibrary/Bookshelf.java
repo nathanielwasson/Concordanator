@@ -1,4 +1,3 @@
-
 package ClassLibrary;
 
 import java.io.BufferedReader;
@@ -10,10 +9,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The Bookshelf object emulates a virtual bookshelf containing Books 
- * acquired from the project Gutenberg web site.  This class will
- * attempt to locate books within a specific directory entitled 'books'
- * located one level outside of this class.
+ * The Bookshelf object emulates a virtual bookshelf containing Books acquired
+ * from the project Gutenberg web site. This class will attempt to locate books
+ * within a specific directory entitled 'books' located one level outside of
+ * this class.
+ *
  * @author Anthony Ratliff
  */
 public final class Bookshelf {
@@ -26,19 +26,18 @@ public final class Bookshelf {
     private String bookDirectory;   // Holds the exact path of the book based on the user's OS environment.
 
     // Class constructor
-
     /**
-     * Public class constructor which takes no arguments and builds
-     * a virtual bookshelf from text files acquired from the project
-     * Gutenberg web site.  The text files must be in the books folder
-     * and contain the project Gutenberg disclaimer.
+     * Public class constructor which takes no arguments and builds a virtual
+     * bookshelf from text files acquired from the project Gutenberg web site.
+     * The text files must be in the books folder and contain the project
+     * Gutenberg disclaimer.
      */
-        public Bookshelf() {
+    public Bookshelf() {
         this.header = new Book();  // Creates empty book for header.
         this.numElements = 0;   // Initialize the book counter to 0.
         this.userDir = System.getProperty("user.dir");  // get the program path.
         this.bookDirectory = this.userDir + File.separator + BOOK_DIRECTORY;    // set the book directory.
-        if (!new File(this.bookDirectory).isDirectory()){
+        if (!new File(this.bookDirectory).isDirectory()) {
             // This checks to see if the book directory is present in the command line.
             // If not, then use is running in Netbeans and the proper folder as be appended.
             this.bookDirectory = this.userDir + File.separator + "src" + File.separator + "books";
@@ -47,19 +46,20 @@ public final class Bookshelf {
     }
 
     // Class methods
-
     /**
      * Method returns the number of books on the bookshelf.
+     *
      * @return
      */
-        public int getNumberOfBooks() {
+    public int getNumberOfBooks() {
         return this.numElements;
     }
 
     /**
-     * Method will return a string array consisting of all books found in
-     * the 'books' directory containing the project Gutenberg disclaimer.
-     * The strings in the array will list books by title and author.
+     * Method will return a string array consisting of all books found in the
+     * 'books' directory containing the project Gutenberg disclaimer. The
+     * strings in the array will list books by title and author.
+     *
      * @return
      */
     public String[] getAllBookTitles() {
@@ -73,15 +73,41 @@ public final class Bookshelf {
         }
         String[] temp2 = new String[index];
         System.arraycopy(temp, 0, temp2, 0, index);
-        
+
+        return temp2;
+    }
+
+    public String[] getAllConcordances() {
+        String[] temp = new String[this.numElements];
+        int index = 0;
+        if (new File(this.bookDirectory).isDirectory()) {
+            File dir = new File(this.bookDirectory);
+            File[] directoryListing = dir.listFiles();
+            if (directoryListing != null) {
+                for (int i = 0; i < directoryListing.length; i++) {
+                    String tempPath = directoryListing[i].getAbsolutePath().substring(directoryListing[i].getAbsolutePath().length() - 4);
+                    if (tempPath.equals(".con")) {
+                        temp[index] = directoryListing[i].getAbsolutePath();
+                        index++;
+                    }
+                }
+
+            } else {
+                // directory was empty.
+            }
+
+        }
+        String[] temp2 = new String[index];
+        System.arraycopy(temp, 0, temp2, 0, index);
         return temp2;
     }
 
     /**
-     * Method will return a string array consisting of all books found on
-     * the shelf based on a keyword search string.  The books must be located in
-     * the 'books' directory and contain the project Gutenberg disclaimer.
-     * The strings in the array will list books by title and author.
+     * Method will return a string array consisting of all books found on the
+     * shelf based on a keyword search string. The books must be located in the
+     * 'books' directory and contain the project Gutenberg disclaimer. The
+     * strings in the array will list books by title and author.
+     *
      * @param keyword
      * @return
      */
@@ -128,41 +154,41 @@ public final class Bookshelf {
             }
         }
     }
-    
+
     /**
-     * Method will return a string array consisting of 3 elements based on 
-     * a keyword search if the book exists. If no book is found, the method
-     * will return null.  The elements of the returned array are: book title, 
-     * book author, and the local path to the book.
+     * Method will return a string array consisting of 3 elements based on a
+     * keyword search if the book exists. If no book is found, the method will
+     * return null. The elements of the returned array are: book title, book
+     * author, and the local path to the book.
+     *
      * @param book
      * @return
      */
-    public String[] pullBook(String book){
+    public String[] pullBook(String book) {
         String[] temp = null;
         Book curr = header.next;
         while (curr != header) {
-            if (book.contains(curr.getTitle())){
+            if (book.contains(curr.getTitle())) {
                 temp = new String[3];
                 temp[0] = curr.getTitle();
                 temp[1] = curr.getAuthor();
                 temp[2] = this.bookDirectory + File.separator + curr.getFileName();
-                curr = header;              
+                curr = header;
             } else {
-               curr = curr.next; 
-            }     
+                curr = curr.next;
+            }
         }
-        
+
         return temp;
     }
-    
-    
+
     /*
-        Private 'addBook' method will accept three string values representing
-        the book title, the book author, and the filename of the text file
-        which contains the book.  A 'Book' object is then created and added 
-        to linked data representing other books.  Method will return 'true' if
-        book was added or false otherwise.
-    */
+     Private 'addBook' method will accept three string values representing
+     the book title, the book author, and the filename of the text file
+     which contains the book.  A 'Book' object is then created and added 
+     to linked data representing other books.  Method will return 'true' if
+     book was added or false otherwise.
+     */
     private boolean addBook(String titl, String auth, String fn) {
         boolean success = false;
         Book curr = header.next;  // Create a pointer named curr.
@@ -242,25 +268,25 @@ public final class Bookshelf {
 
         return temp;
     }
-    
+
     /*
-        Private class method which recieves a book path and then determines if the book
-        is a memeber of the project Gutenberg library.  Method returns true if so and
-        false otherwise.
-    */
-    private boolean isGutenberg(String bookPath){
+     Private class method which recieves a book path and then determines if the book
+     is a memeber of the project Gutenberg library.  Method returns true if so and
+     false otherwise.
+     */
+    private boolean isGutenberg(String bookPath) {
         boolean success = false;    // initialize boolean variable to be returned.
         File file = new File(bookPath);
         BufferedReader fileIn;  // create a buffered reader object to browse the text file.
-        if (file.isFile()){ // if the file path passed in is actually a file
+        if (file.isFile()) { // if the file path passed in is actually a file
             try {
                 fileIn = new BufferedReader(new FileReader(file));  // create a new buffered file reader object from the file.
-                while (fileIn.ready()){
+                while (fileIn.ready()) {
                     String line = fileIn.readLine();    // read a line of text.
                     if (line.contains("PROJECT GUTENBERG")) {
                         // if the text contains the above disclaimer,
-                    success = true; // set the boolean response to true.
-                    break;  // stop reading the book.
+                        success = true; // set the boolean response to true.
+                        break;  // stop reading the book.
                     }
                 }
             } catch (FileNotFoundException ex) {
@@ -269,7 +295,7 @@ public final class Bookshelf {
                 Logger.getLogger(Concordance.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
         return success; // return the result of the querry.
     }
 
