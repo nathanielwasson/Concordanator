@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public class Concord implements Serializable{
     private int number_of_lines;
-    private String file_name,flat_words_full;
+    private String file_name,flat_words_full, book_title, book_author;
     private String[] file_lines, flat_words;
     private ArrayList[] file_words;
     private HashMap<String, Word> concord;
@@ -28,19 +28,33 @@ public class Concord implements Serializable{
      * @param file_name name of the file to make the concordance from
      * @throws IOException 
      */
-    public Concord(String file_name) throws IOException{
+    public Concord(String title, String author, String file_name) throws IOException{
+        this.book_title = title;
+        this.book_author = author;
         this.file_name = file_name;
+        //System.out.println("Stage 1: Setting number of lines.");
         this.number_of_lines = set_number_lines();
+        //System.out.println("Stage 2: Setting file lines.");
         this.file_lines = this.set_file_lines();
+        //System.out.println("Stage 3: Setting file words.");
         this.file_words = this.set_file_words();
+        System.out.print("\r|=        | Stage 1 of 9");
         this.flat_words_full = Arrays.toString(this.file_lines).toLowerCase();
+        System.out.print("\r|==       | Stage 2 of 9");
         this.flat_words = flat_words_full.split("[\\s--.,;\\n\\t]");
+        System.out.print("\r|===      | Stage 3 of 9");
         this.unique_words = this.set_unique_words();
+        System.out.print("\r|====     | Stage 4 of 9");
         this.all_appearances = this.set_all_appearances();
+        System.out.print("\r|=====    | Stage 5 of 9");
         this.appearance_ranks = this.set_appearance_ranks();
+        System.out.print("\r|======   | Stage 6 of 9");
         this.concord = this.set_concord();
-        this.common_words = this.set_common_words();
+        System.out.print("\r|=======  | Stage 7 of 9");
+        //this.common_words = this.set_common_words();
+        System.out.print("\r|======== | Stage 8 of 9");
         this.save();
+        System.out.print("\r|=========| Stage 9 of 9\n");
     }
     
     public class Word implements Serializable{
@@ -290,7 +304,7 @@ public class Concord implements Serializable{
      * @return 
      */
     //Gets the number of lines that a word appears on
-    private int get_number_lines(String target_word){
+    public int get_number_lines(String target_word){
         return this.get_list_lines(target_word).size();
     }
     
@@ -299,13 +313,13 @@ public class Concord implements Serializable{
      * @param target_word
      * @return integer number of occurrences for the given word
      */
-    private int get_number_occurrences(String target_word){
+    public int get_number_occurrences(String target_word){
         int counter = 0;
         for(ArrayList<String> str: this.file_words){
             if (str!=null){
                 for(String word: str){
                     if(target_word.equals(word)){
-                    counter++                    ;
+                    counter++;
                     }
                 }
             }
@@ -421,12 +435,14 @@ public class Concord implements Serializable{
      * @throws IOException 
      */
     public void save() throws FileNotFoundException, IOException{
-        String name = this.file_name.split("[.]")[0] + ".con";
+        /*String name = this.file_name.substring(0, this.file_name.length()-4) + ".con";
         FileOutputStream fileOut = new FileOutputStream(name);
         ObjectOutputStream out = new ObjectOutputStream(fileOut);
         out.writeObject(this);
         out.close();
-        fileOut.close();
+        fileOut.close();*/
+        IO<Concord> io = new IO<Concord>(this.file_name);
+        io.serialize(this);
     }
     /**
      * Currently only return line numbers that contain the entire phrase,
