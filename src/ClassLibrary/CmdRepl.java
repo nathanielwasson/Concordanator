@@ -28,17 +28,18 @@ public class CmdRepl implements Serializable {
     private String cmdStr;
     private boolean conLoaded;
     private Bookshelf shelf;
-    private Concordance concord;
+    private Concord concord;
     private String OSName = System.getProperty("os.name").substring(0, 3);
     private String userDir;
     private String conDir;
     private String booksDir;
     private boolean isWin;
-  
+
     private enum Commands {
         load, 
         help, 
-        listbooks, 
+        listbooks,
+        addbook,
         listcons,
         build,
         search,
@@ -192,8 +193,16 @@ public class CmdRepl implements Serializable {
                 }
                 break;
             case listcons :
-                
+                this.listCords();
                 break; 
+            case addbook :
+                if (cmdArg.toString().equals("[]")) {
+                    System.out.println("ERROR: Incorrect usage.  Please provide a path to the book to be added.");
+                } else {
+                    this.addBook(cmdArg.toString().substring(1, 
+                            cmdArg.toString().length() - 1));
+                }
+                break;
             case build :
                 this.buildConcordance(cmdArg.toString()
                         .substring(1, cmdArg.toString().length() - 1));
@@ -209,14 +218,24 @@ public class CmdRepl implements Serializable {
                 if (!conLoaded) {
                     System.out.println("Error: no concordance loaded.");
                 } else {
-                    
+                     if (cmdArg.toString().equals("[]")) {
+                         System.out.println("Incorrect Usage: Number of word occurences requires an argument.");
+                } else {
+                    this.numOccurences(cmdArg.toString().substring(1, 
+                            cmdArg.toString().length() - 1));
+                }
                 }
                 break;
             case numlines :
                 if (!conLoaded) {
                     System.out.println("Error: no concordance loaded.");
                 } else {
-                    
+                 if (cmdArg.toString().equals("[]")) {
+                         System.out.println("Incorrect Usage: Number of lines requires an argument.");
+                } else {
+                    this.numberOfLines(cmdArg.toString().substring(1, 
+                            cmdArg.toString().length() - 1));
+                }
                 }
                 break;
             case phrase :
@@ -241,19 +260,20 @@ public class CmdRepl implements Serializable {
      *                  must also have the file name appended to it
      */
     public void saveConcordance(Concord c, String conPath) {
-        IO io = new IO();
+        IO<Concord> io = new IO<Concord>(conPath);
         
-        io.serialize(c, conPath);
+        io.serialize(c);
     }
     
     /***
      * 
      * @param conPath The path or the name of the concordance to load.
+     * @return 
      */
-    public Concordance loadConcordance(String conPath) {
-        IO io = new IO();
+    public Concord loadConcordance(String conPath) {
+        IO<Concord> io = new IO<Concord>(conPath);
         
-        return (Concordance) io.deserialize(conPath);
+        return (Concord) io.deserialize(conPath);
     }
     
     /***
@@ -261,7 +281,7 @@ public class CmdRepl implements Serializable {
      * @param q
      * @return 
      * 
-     * Should return the string representaion of the results of the search.
+     * Should return the string representation of the results of the search.
      */
     public String searchCon(String q) {
         throw new UnsupportedOperationException();
@@ -294,12 +314,50 @@ public class CmdRepl implements Serializable {
         }
     }
     
+    private void listCords() {
+        String[] cords = shelf.getAllConcordances();
+        
+        System.out.println("Concordances: ====================");
+        for (String s : cords) {
+            System.out.println(s);
+        }
+    }
+    
     private void buildConcordance(String title) {
         title = title.replace(",", "");
         String[] bookInformation = shelf.pullBook(title);
-        this.concord = new Concordance(bookInformation[0], 
-                bookInformation[1], bookInformation[2]);
+        if (bookInformation == null){
+            System.out.println("Error: Book not found. Please check the name and try again.");
+        } else {
+           try {
+               System.out.println("Building the concordance. This may take a moment for large books.");
+            this.concord = new Concord(bookInformation[0], bookInformation[1], bookInformation[2]);
+            this.conLoaded = true;
+               System.out.println("SUCCESS: The concordance was built and loaded.");
+        } catch (IOException ex) {
+            System.out.println("File Error: The file is not found on the system.");
+        } 
+        } 
+    }
+    
+    private void numOccurences (String word){
+        int temp = concord.get_number_occurrences(word);
+        System.out.println("The word " + word + " appears " + temp + " times.");
         
+        
+    }
+    
+    private void numberOfLines(String word){
+        int temp = concord.get_number_lines(word);
+        System.out.println("The word " + word + " appears on " + temp + " lines.");
+    }
+    
+        private void addBook(String filePath) {
+        if (shelf.addNewBook(filePath)){
+            System.out.println("SUCCESS:  Book was added to the shelf.");
+        } else {
+            System.out.println("ERROR: The book was not added to the shelf.");
+        }
     }
     
     /**
@@ -312,12 +370,13 @@ public class CmdRepl implements Serializable {
                 + "help                    - show this help.\n"
                 + "listbooks [keyword]     - list all books matching keyword.\n"
                 + "listcons [keyword]      - list concordances matching keyword.\n"
+                + "build [keyword]         - build a concordance by book title.\n"
                 + "search <keyword>        - find occurrences of keyword in loaded concordance.\n"
                 + "numoccur <keyword>      - find number of occurrences of keyword in loaded concordance.\n"
                 + "numlines <title>        - return the number of lines in the file.\n"
-                + "phrase <phrase>         - find occurrences of phrase in loaded concordance.\n";
+                + "phrase <phrase>         - find occurrences of phrase in loaded concordance.\n"
+                + "exit                    - close Concordanator application.\n";
         
         System.out.println(helpTxt);
     }
 }
-
