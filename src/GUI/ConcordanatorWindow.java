@@ -271,10 +271,10 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
     private Bookshelf shelf;
     private Concord concord;
-    DefaultListModel<String> model;
+    DefaultListModel model;
 
     private void populateGUI() {
-        model = new DefaultListModel<>();
+        model = new DefaultListModel();
         String[] books = shelf.getAllBookTitles();
         for (String book : books) {
             model.addElement(book);
