@@ -113,7 +113,7 @@ public final class Bookshelf {
             if (directoryListing != null) {
                 for (File directoryListing1 : directoryListing) {
                     String tempPath = directoryListing1.getAbsolutePath().substring(directoryListing1.getAbsolutePath().length() - 4);
-                    if (tempPath.equals(".con")  && directoryListing1.getName().contains(keyword)) {
+                    if (tempPath.equals(".con")  && directoryListing1.getName().toLowerCase().contains(keyword.toLowerCase())) {
                         temp[index] = directoryListing1.getName();
                         index++;
                     }
