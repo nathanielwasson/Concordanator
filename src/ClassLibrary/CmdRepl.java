@@ -193,7 +193,13 @@ public class CmdRepl implements Serializable {
                 }
                 break;
             case listcons :
-                this.listCords();
+                if (cmdArg.toString().equals("[]")) {
+                    this.listCords();
+                } else {
+                    this.listCords(cmdArg.toString().substring(1, 
+                            cmdArg.toString().length() - 1));
+                }
+                
                 break; 
             case addbook :
                 if (cmdArg.toString().equals("[]")) {
@@ -317,6 +323,14 @@ public class CmdRepl implements Serializable {
     private void listCords() {
         String[] cords = shelf.getAllConcordances();
         
+        System.out.println("Concordances: ====================");
+        for (String s : cords) {
+            System.out.println(s);
+        }
+    }
+    
+    private void listCords(String concordance){
+        String[] cords = shelf.getConcordancesByKeyword(concordance);
         System.out.println("Concordances: ====================");
         for (String s : cords) {
             System.out.println(s);
