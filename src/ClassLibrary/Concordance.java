@@ -109,7 +109,7 @@ public class Concordance implements Serializable {
         
         private Word(String w){
             this.word = w;
-            this.line_numbers = new ArrayList<>();
+            this.line_numbers = new ArrayList<Integer>();
             this.number_apperances = 1;
             this.apperance_rank = 0;
         }

@@ -260,7 +260,7 @@ public class CmdRepl implements Serializable {
      *                  must also have the file name appended to it
      */
     public void saveConcordance(Concord c, String conPath) {
-        IO<Concord> io = new IO<>(conPath);
+        IO<Concord> io = new IO<Concord>(conPath);
         
         io.serialize(c);
     }
@@ -271,7 +271,7 @@ public class CmdRepl implements Serializable {
      * @return 
      */
     public Concord loadConcordance(String conPath) {
-        IO<Concord> io = new IO<>(conPath);
+        IO<Concord> io = new IO<Concord>(conPath);
         
         return (Concord) io.deserialize(conPath);
     }

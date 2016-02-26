@@ -441,7 +441,7 @@ public class Concord implements Serializable{
         out.writeObject(this);
         out.close();
         fileOut.close();*/
-        IO<Concord> io = new IO<>(this.file_name);
+        IO<Concord> io = new IO<Concord>(this.file_name);
         io.serialize(this);
     }
     /**
