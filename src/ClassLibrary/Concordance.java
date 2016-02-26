@@ -16,20 +16,21 @@ public class Concordance implements Serializable {
     // private class fields.
     LinkedList[] hastable;
     String bookTitle, bookAuthor, filePath;
-    int bookStartLine;
+    int wordCount, lineCount;
     
     public Concordance(String bt, String a, String fn) {
         this.hastable = new LinkedList[27];
         this.bookTitle = bt;
         this.bookAuthor = a;
         this.filePath = fn;
-        this.bookStartLine = 0;
+        this.wordCount = 0;
+        this.lineCount = 0;
+        this.makeConcordance();
     }
     
     public boolean makeConcordance(){
         boolean success = false;
         int fileLineNumber = 0;
-        int workLineNumber = 0;
         int hashKey;
         boolean bookStart = false;
         File file = new File(this.filePath);
@@ -41,20 +42,36 @@ public class Concordance implements Serializable {
                     fileLineNumber++;
                     String line = fileIn.readLine();
                     if (line.contains("*** END OF THIS PROJECT GUTENBERG")) bookStart = false;
+                    if (line.contains("*** START OF THIS PROJECT GUTENBERG")) {
+                        line = fileIn.readLine();
+                        bookStart = true;
+                    }
                     if (bookStart){
-                        workLineNumber++;
                         // If the line is bigger than 0, do the following.
                         if (line.length() > 0){
                            // Split line into array
                             String[] words = line.split(" ");
                             for (int i = 0;i< words.length;i++){
                                 String word = words[i].toLowerCase();
+                                if (word.length() > 0){
                                 char firstChar = word.charAt(0);
                                 hashKey = (((int)firstChar % 97) + 1);
-                                System.out.println(hashKey);
-                                this.hastable[hashKey].add(new Word(word));
+                                if (hashKey > 27) hashKey = 0;
+                                if (this.hastable[hashKey] == null){
+                                    this.hastable[hashKey] = new LinkedList();
+                                }
+                                Word addWord = new Word(word);
+                                if (this.hastable[hashKey].contains(addWord.getWord())){
+                                    
+                                }
+                                else{
+                                this.hastable[hashKey].add(addWord);
+                                }
+                                this.wordCount++;
                                 System.out.println("Hash Key = " + hashKey);
                                 System.out.println("Word = " +word);
+                            
+                            }
                             }
                         }
                         
@@ -66,14 +83,12 @@ public class Concordance implements Serializable {
                     else {
                         if (line.contains("*** START OF THIS PROJECT GUTENBERG")) {
                             bookStart = true;
-                            this.bookStartLine = fileLineNumber + 1;
                         }
                     }
                 }
                 System.out.println(bookTitle + " " + bookAuthor + " " + filePath);
                 System.out.println("Total line numbers of text file: " + fileLineNumber);
-                System.out.println("Total line numbers of the book: " + workLineNumber);
-                System.out.println("Book begins on line: " + this.bookStartLine);
+                System.out.println("Total number of words found: " + this.wordCount);
                 success = true;
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(Concordance.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,11 +107,31 @@ public class Concordance implements Serializable {
         ArrayList<Integer> line_numbers;
         int number_apperances, apperance_rank;
         
-        public Word(String w){
+        private Word(String w){
             this.word = w;
-            this.line_numbers = null;
+            this.line_numbers = new ArrayList<Integer>();
             this.number_apperances = 1;
             this.apperance_rank = 0;
+        }
+        
+        private String getWord(){
+            return this.word;
+        }
+        
+        private ArrayList<Integer> getLineNumbers(){
+            return this.line_numbers;
+        }
+        
+        private void addLineNumber(int num){
+            this.line_numbers.add(num);
+        }
+        
+        private void incrementWordCount(){
+            this.number_apperances++;
+        }
+        
+        private int getWordRank(){
+            return this.apperance_rank;
         }
     }
 }
