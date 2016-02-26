@@ -103,6 +103,31 @@ public final class Bookshelf {
         System.arraycopy(temp, 0, temp2, 0, index);
         return temp2;
     }
+    
+    public String[] getConcordancesByKeyword(String keyword){
+        String[] temp = new String[this.numElements];
+        int index = 0;
+        if (new File(this.bookDirectory).isDirectory()) {
+            File dir = new File(this.bookDirectory);
+            File[] directoryListing = dir.listFiles();
+            if (directoryListing != null) {
+                for (File directoryListing1 : directoryListing) {
+                    String tempPath = directoryListing1.getAbsolutePath().substring(directoryListing1.getAbsolutePath().length() - 4);
+                    if (tempPath.equals(".con")  && directoryListing1.getName().contains(keyword)) {
+                        temp[index] = directoryListing1.getName();
+                        index++;
+                    }
+                }
+
+            } else {
+                // directory was empty.
+            }
+
+        }
+        String[] temp2 = new String[index];
+        System.arraycopy(temp, 0, temp2, 0, index);
+        return temp2;
+    }
 
     /**
      * Method will return a string array consisting of all books found on the
