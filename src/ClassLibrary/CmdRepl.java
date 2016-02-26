@@ -9,8 +9,6 @@ import java.io.*;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -23,17 +21,17 @@ public class CmdRepl implements Serializable {
     private String[] args;
     private boolean exit;
     private String prompt = "> ";
-    private InputStreamReader reader;
-    private BufferedReader in;
+    private final InputStreamReader reader;
+    private final BufferedReader in;
     private String cmdStr;
     private boolean conLoaded;
-    private Bookshelf shelf;
+    private final Bookshelf shelf;
     private Concord concord;
-    private String OSName = System.getProperty("os.name").substring(0, 3);
-    private String userDir;
-    private String conDir;
-    private String booksDir;
-    private boolean isWin;
+    private final String OSName = System.getProperty("os.name").substring(0, 3);
+    private final String userDir;
+    //private final String conDir;
+    private final String booksDir;
+    private final boolean isWin;
 
     private enum Commands {
         load, 
@@ -65,16 +63,16 @@ public class CmdRepl implements Serializable {
        this.userDir = System.getProperty("user.dir");
        
        if (this.OSName.equals("Win")) {
-           this.conDir = this.userDir + "\\cons";
+           //this.conDir = this.userDir + "\\cons";
            this.booksDir = this.userDir + "\\cons";
            this.isWin = true;
        } else {
-           this.conDir = this.userDir + "/cons";
+           //this.conDir = this.userDir + "/cons";
            this.booksDir = this.userDir + "/cons";
            this.isWin = false;
        }
        
-       System.out.println("Con dir: " + this.conDir);
+       //System.out.println("Con dir: " + this.conDir);
     }
     
     /***
@@ -238,7 +236,7 @@ public class CmdRepl implements Serializable {
      * @param conPath - The path to which to save the concordance
      *                  must also have the file name appended to it
      */
-    public void saveConcordance(Concord c, String conPath) {
+    private void saveConcordance(Concord c, String conPath) {
         IO<Concord> io = new IO<Concord>(conPath);
         
         io.serialize(c);
@@ -249,7 +247,7 @@ public class CmdRepl implements Serializable {
      * @param conPath The path or the name of the concordance to load.
      * @return 
      */
-    public boolean loadConcordance(String title) {
+    private boolean loadConcordance(String title) {
         boolean success = false;
         title = title.replace(",", "");
         String[] bookInformation = shelf.pullBook(title);
