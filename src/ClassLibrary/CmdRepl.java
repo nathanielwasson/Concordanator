@@ -151,35 +151,8 @@ public class CmdRepl implements Serializable {
         }
         switch (command) {
             case load :
-                String title = "";
-                String textPath = "";
-                for (String s : cmdArg) {
-                    title = title + s + " ";
-                }
-                
-                if (!title.isEmpty()) {
-                    title = title.substring(0, title.length() - 1);
-                    System.out.println(title);
-                } else {
-                    System.out.println("Please provide a book name to load.");
-                    break;
-                }
-                
-                if (isWin) 
-                    textPath = this.booksDir + "\\" + title + ".con";
-                else
-                    textPath = this.booksDir + "/" + title + ".con";
-                System.out.println(textPath);
-                // Now we call load with the textPath
-                this.concord = this.loadConcordance(textPath);
-                
-                if (this.concord != null) {
-                    System.out.println(title + " loaded.");
-                    this.conLoaded = true;
-                } else {
-                    System.out.println(title + " failed to load, are you sure it exists?");
-                    this.conLoaded = false;
-                }
+                if (this.loadConcordance(cmdArg.toString()
+                        .substring(1, cmdArg.toString().length() - 1))) this.conLoaded = true;
                 break;
             case help :
                 this.printHelp();
@@ -276,10 +249,29 @@ public class CmdRepl implements Serializable {
      * @param conPath The path or the name of the concordance to load.
      * @return 
      */
-    public Concord loadConcordance(String conPath) {
-        IO<Concord> io = new IO<Concord>(conPath);
+    public boolean loadConcordance(String title) {
+        boolean success = false;
+        title = title.replace(",", "");
+        String[] bookInformation = shelf.pullBook(title);
+        if (bookInformation == null){
+            System.out.println("Error: No concordance found. Please check the name and try again.");
+        } else {
+            String conPath = bookInformation[2].substring(0, bookInformation[2].length()-4) + ".con";
+            File conFile = new File(conPath);
+            if (conFile.isFile()){
+                IO<Concord> io = new IO<Concord>(conPath);
+                this.concord = io.deserialize(conPath);
+                System.out.println("SUCCESS: Concordance loaded.");
+                success = true;
+            }
+            else{
+                System.out.println("Error: No concordance found. Please check the name and try again.");
+            }
+        }
+        return success;
         
-        return (Concord) io.deserialize(conPath);
+        
+        //return (Concord) io.deserialize(conPath);
     }
     
     /***
