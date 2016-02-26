@@ -51,7 +51,7 @@ public class Concord implements Serializable{
         System.out.print("\r|======   | Stage 6 of 9");
         this.concord = this.set_concord();
         System.out.print("\r|=======  | Stage 7 of 9");
-        //this.common_words = this.set_common_words();
+        this.common_words = this.set_common_words();
         System.out.print("\r|======== | Stage 8 of 9");
         this.save();
         System.out.print("\r|=========| Stage 9 of 9\n");
@@ -392,9 +392,15 @@ public class Concord implements Serializable{
     //that should be excluded from the concord
     private ArrayList<String> set_common_words() throws FileNotFoundException, IOException{
             ArrayList<String> common_words = new ArrayList<String>();
-            
+            File comWordFile = null;
+            if (new File("ClassLibrary" + File.separator + "commonwords.txt").isFile()){
+                comWordFile = new File("ClassLibrary" + File.separator + "commonwords.txt");
+            }
+            else if (new File("src" + File.separator + "ClassLibrary" + File.separator + "commonwords.txt").isFile()){
+                comWordFile = new File("src" + File.separator + "ClassLibrary" + File.separator + "commonwords.txt");
+            }
             //open file
-            FileReader file_reader = new FileReader("commonwords.txt");
+            FileReader file_reader = new FileReader(comWordFile);
             BufferedReader  buffered_reader = new BufferedReader(file_reader);
             String line;
             //Write each line in file to element in array
