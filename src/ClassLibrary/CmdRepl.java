@@ -29,7 +29,8 @@ public class CmdRepl implements Serializable {
     private Concord concord;
     private final String OSName = System.getProperty("os.name").substring(0, 3);
     private final String userDir;
-    //private final String conDir;
+    private final String CONCORD_DIRECTORY = "books";  // Name of the folder which contains the concordances.
+    private String concordDirectory;   // Holds the exact path of the concordance based on the user's OS environment.
     private final String booksDir;
     private final boolean isWin;
 
@@ -71,6 +72,13 @@ public class CmdRepl implements Serializable {
            this.booksDir = this.userDir + "/cons";
            this.isWin = false;
        }
+       
+        this.concordDirectory = this.userDir + File.separator + CONCORD_DIRECTORY;    // set the book directory.
+        if (!new File(this.concordDirectory).isDirectory()) {
+            // This checks to see if the concordance directory is present in the command line.
+            // If not, then user is running in Netbeans and the proper folder will be appended.
+            this.concordDirectory = this.userDir + File.separator + "src" + File.separator + "books";
+        }
        
        //System.out.println("Con dir: " + this.conDir);
     }
@@ -166,7 +174,11 @@ public class CmdRepl implements Serializable {
             case listcons :
                 if (cmdArg.toString().equals("[]")) {
                     this.listCords();
-                } else {
+                } else if (cmdArg.size() == 2){
+                    int numAppear = Integer.parseInt(cmdArg.get(1));
+                    this.listCords(cmdArg.get(0), numAppear);
+                }
+                else {
                     this.listCords(cmdArg.toString().substring(1, 
                             cmdArg.toString().length() - 1));
                 }
@@ -249,7 +261,7 @@ public class CmdRepl implements Serializable {
      */
     private boolean loadConcordance(String title) {
         boolean success = false;
-        title = title.replace(",", "");
+        title = title.replace(",", ""); // What if there is a comma in the book title??
         String[] bookInformation = shelf.pullBook(title);
         if (bookInformation == null){
             System.out.println("Error: No concordance found. Please check the name and try again.");
@@ -324,6 +336,21 @@ public class CmdRepl implements Serializable {
         System.out.println("Concordances: ====================");
         for (String s : cords) {
             System.out.println(s);
+        }
+    }
+    
+    private void listCords(String keyword, int numAppear){
+        String[] cords = shelf.getAllConcordances();
+        QueryCon[] querys = new QueryCon[cords.length];
+        for (int i = 0;i<cords.length;i++){
+            querys[i] = new QueryCon(this.concordDirectory + File.separator + cords[i], keyword, numAppear);
+        }
+        
+        System.out.println("Concordances: ====================");
+        for (QueryCon query : querys) {
+            if (query.getValid() == true) {
+                System.out.println(query.getConFile());
+            }
         }
     }
     
