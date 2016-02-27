@@ -260,6 +260,7 @@ public class CmdRepl implements Serializable {
                 } else {
                  if (cmdArg.toString().equals("[]")) {
                          System.out.println("SUCCESS: Concordance unloaded.");
+                         this.prompt = "> ";
                          this.conLoaded = false;
                 } else {
                     System.out.println("Incorrect Usage: Unload does not require an argument.");
@@ -304,6 +305,7 @@ public class CmdRepl implements Serializable {
                 IO<Concord> io = new IO<Concord>(conPath);
                 this.concord = io.deserialize(conPath);
                 System.out.println("SUCCESS: Concordance loaded.");
+                this.prompt = "\n" + conFile.getName().substring(0, conFile.getName().length() - 4) + " > ";
                 success = true;
             }
             else{
