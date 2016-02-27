@@ -9,6 +9,7 @@ import java.io.*;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;  
 import java.util.concurrent.Executors; 
 
@@ -46,8 +47,10 @@ public class CmdRepl implements Serializable {
         search,
         numoccur,
         numlines,
+        rank,
         phrase,
-        invalid, 
+        invalid,
+        unload,
         exit;
     }
     
@@ -150,7 +153,7 @@ public class CmdRepl implements Serializable {
         if (cmd.size() > 1) {
             cmdArg = cmd.subList(1, cmd.size());
         }
-        System.out.println("Command Arg: " + cmdArg.toString());
+        //System.out.println("Command Arg: " + cmdArg.toString());
         try {
             command = Commands.valueOf(cmd.get(0));
         }
@@ -175,12 +178,15 @@ public class CmdRepl implements Serializable {
                 break;
             case listcons :
                 if (cmdArg.toString().equals("[]")) {
+                    // This section fires if there are no arguments.
                     this.listCords();
-                } else if (cmdArg.size() == 2){
+                } else if (cmdArg.size() == 2 && this.isInteger(cmdArg.get(1), 10)){
+                    // This section only fires if there are only two keywords and the second is an integer.
                     int numAppear = Integer.parseInt(cmdArg.get(1));
                     this.listCords(cmdArg.get(0), numAppear);
                 }
                 else {
+                    // This section fires for any other case.
                     this.listCords(cmdArg.toString().substring(1, 
                             cmdArg.toString().length() - 1));
                 }
@@ -229,11 +235,35 @@ public class CmdRepl implements Serializable {
                 }
                 }
                 break;
+            case rank :
+                if (!conLoaded) {
+                    System.out.println("Error: no concordance loaded.");
+                } else {
+                 if (cmdArg.toString().equals("[]")) {
+                         System.out.println("Incorrect Usage: Rank requires an argument.");
+                } else {
+                    this.rank(cmdArg.toString().substring(1, 
+                            cmdArg.toString().length() - 1));
+                }
+                }
+                break;
             case phrase :
                 if (!conLoaded) {
                     System.out.println("Error: no concordance loaded.");
                 } else {
                     
+                }
+                break;
+            case unload :
+                if (!conLoaded) {
+                    System.out.println("Error: no concordance loaded.");
+                } else {
+                 if (cmdArg.toString().equals("[]")) {
+                         System.out.println("SUCCESS: Concordance unloaded.");
+                         this.conLoaded = false;
+                } else {
+                    System.out.println("Incorrect Usage: Unload does not require an argument.");
+                }
                 }
                 break;
             case exit :
@@ -309,48 +339,58 @@ public class CmdRepl implements Serializable {
     private void listbooks() {
         String[] titles = shelf.getAllBookTitles();
         
-        System.out.println("Titles: ====================");
+        System.out.println("\nTitles: ====================");
         for (String s : titles) {
             System.out.println(s);
         }
+        System.out.println();
     }
     
     private void listbooks(String book) {
+        book = book.replace(",", ""); // What if there is a comma in the book title??
         String[] titles = shelf.getBookTitlesByKeyword(book);
         
-        System.out.println("Titles: ====================");
+        System.out.println("\nTitles: ====================");
         for (String s : titles) {
             System.out.println(s);
         }
+        System.out.println();
     }
     
     private void listCords() {
         String[] cords = shelf.getAllConcordances();
         
-        System.out.println("Concordances: ====================");
+        System.out.println("\nConcordances: ====================");
         for (String s : cords) {
             System.out.println(s);
         }
+        System.out.println();
     }
     
     private void listCords(String concordance){
+        concordance = concordance.replace(",", ""); // What if there is a comma in the book title??
         String[] cords = shelf.getConcordancesByKeyword(concordance);
-        System.out.println("Concordances: ====================");
+        System.out.println("\nConcordances: ====================");
         for (String s : cords) {
             System.out.println(s);
         }
+        System.out.println();
     }
     
     private void listCords(String keyword, int numAppear){
         String[] cords = shelf.getAllConcordances();
         ExecutorService executor = Executors.newFixedThreadPool(cords.length);
-        System.out.println("Concordances: ====================");
+        System.out.println("\nConcordances: ====================");
         for (int i = 0;i<cords.length;i++){
             Runnable worker = new QueryCon(this.concordDirectory + File.separator + cords[i], keyword, numAppear);
             executor.execute(worker);
         }
         executor.shutdown();
-        while (!executor.isTerminated()) {   } 
+        while (!executor.isTerminated()) {
+        // Just a loop to simulate a pause in the command line while
+        // the concordances are being queried.
+        } 
+        System.out.println();
     }
     
     private void buildConcordance(String title) {
@@ -382,6 +422,11 @@ public class CmdRepl implements Serializable {
         System.out.println("The word " + word + " appears on " + temp + " lines.");
     }
     
+    private void rank(String word){
+        int temp = concord.get_appearance_rank(word);
+        System.out.println("The word " + word + " is ranked: " + temp);
+    }
+    
         private void addBook(String filePath) {
         if (shelf.addNewBook(filePath)){
             System.out.println("SUCCESS:  Book was added to the shelf.");
@@ -408,5 +453,14 @@ public class CmdRepl implements Serializable {
                 + "exit                    - close Concordanator application.\n";
         
         System.out.println(helpTxt);
+    }
+    
+    private boolean isInteger(String s, int radix){
+        Scanner sc = new Scanner(s.trim());
+        if(!sc.hasNextInt(radix)) return false;
+        // we know it starts with a valid int, now make sure
+        // there's nothing left!
+        sc.nextInt(radix);
+        return !sc.hasNext();
     }
 }
