@@ -9,6 +9,8 @@ import java.io.*;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;  
+import java.util.concurrent.Executors; 
 
 /**
  *
@@ -341,17 +343,14 @@ public class CmdRepl implements Serializable {
     
     private void listCords(String keyword, int numAppear){
         String[] cords = shelf.getAllConcordances();
-        QueryCon[] querys = new QueryCon[cords.length];
-        for (int i = 0;i<cords.length;i++){
-            querys[i] = new QueryCon(this.concordDirectory + File.separator + cords[i], keyword, numAppear);
-        }
-        
+        ExecutorService executor = Executors.newFixedThreadPool(cords.length);
         System.out.println("Concordances: ====================");
-        for (QueryCon query : querys) {
-            if (query.getValid() == true) {
-                System.out.println(query.getConFile());
-            }
+        for (int i = 0;i<cords.length;i++){
+            Runnable worker = new QueryCon(this.concordDirectory + File.separator + cords[i], keyword, numAppear);
+            executor.execute(worker);
         }
+        executor.shutdown();
+        while (!executor.isTerminated()) {   } 
     }
     
     private void buildConcordance(String title) {
