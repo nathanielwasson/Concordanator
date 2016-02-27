@@ -1,31 +1,28 @@
 package ClassLibrary;
-
+ 
 import java.io.File;
 
-public class QueryCon{
+public class QueryCon implements Runnable {
     // private class fields
-    private final String conFile;
-    private final boolean valid;
+    private String conFile;
+    private final int numAppear;
+    private final String keyword;
     
-    public QueryCon(String conFile, String keyword, int numAppear){
-      File concordFile = new File(conFile);
+    public QueryCon(String cf, String kd, int num){
+      this.conFile = cf;
+      this.keyword = kd;
+      this.numAppear = num;
+    }
+
+    @Override
+    public void run() {
+        File concordFile = new File(conFile);
       if (concordFile.isFile()){
-          this.conFile = concordFile.getName();
           IO<Concord> io = new IO<Concord>(conFile);
           Concord concordance = (Concord)io.deserialize(conFile);
-          this.valid = concordance.get_number_occurrences(keyword) >= numAppear;
+          if(concordance.get_number_occurrences(keyword) >= numAppear){
+              System.out.println(concordFile.getName());
+          } 
       }
-      else{
-          this.conFile = null;
-          this.valid = false;
-      }
-    }
-    
-    public boolean getValid(){
-        return this.valid;
-    }
-    
-    public String getConFile(){
-        return this.conFile;
     }
 }
