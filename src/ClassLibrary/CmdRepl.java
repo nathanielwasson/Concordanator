@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;  
 import java.util.concurrent.Executors; 
+import java.util.HashMap;
 
 /**
  *
@@ -44,7 +45,7 @@ public class CmdRepl implements Serializable {
         addbook,
         listcons,
         build,
-        search,
+        summary,
         numoccur,
         numlines,
         rank,
@@ -106,7 +107,7 @@ public class CmdRepl implements Serializable {
             listcons [keyword]
             prompt => [title of con] >
             build <title | path> (possibly redundant)
-            search <keyword>
+            summary <keyword>
             numoccur <keyword>
             numlines <title>
             surrwords <keyword, offset>
@@ -204,12 +205,17 @@ public class CmdRepl implements Serializable {
                 this.buildConcordance(cmdArg.toString()
                         .substring(1, cmdArg.toString().length() - 1));
                 break;
-            case search :
+            case summary :
+				System.out.println(cmdArg.get(0));
                 if (!conLoaded) {
                     System.out.println("Error: no concordance loaded.");
                 } else {
-
-                    
+					if (cmdArg.toString().equals("[]")) {
+						// Show a summary of the whole concordance
+						break;
+					} else {
+						this.showWordSummary(cmdArg.get(0).toLowerCase());
+					}
                 }
                 break;
             case numoccur :
@@ -338,6 +344,33 @@ public class CmdRepl implements Serializable {
     public int findArg(String arg) {
         throw new UnsupportedOperationException();
     }
+
+	/**
+	 * @param The string word to show a summary for
+	 * 
+	 */
+	private void showWordSummary(String word) {
+		int rank = this.concord.get_appearance_rank(word);
+		int numLines = this.concord.get_number_lines(word);
+		int occur = this.concord.get_number_occurrences(word);
+
+		//Find the word and print out the lines in which it occurs
+		ArrayList<Integer> lines = this.concord.getWordLines(word);
+		String linesStr = "";
+
+		for (int i = 0; i < lines.size(); i++) {
+			linesStr = linesStr + lines.get(i) + " ";
+			if (i % 10 == 0) linesStr = linesStr + "\n";
+		}
+
+		System.out.println(linesStr);
+
+		System.out.println("Summary of " + word + ": \n"
+				+ "Rank:                       " + rank + "\n"
+				+ "Num of Lines appeared on:   " + numLines + "\n"
+				+ "Number of occurrences:      " + occur + "\n"
+				+ "Line numbers containing " + word + ":\n");
+	}
     
     private void listbooks() {
         String[] titles = shelf.getAllBookTitles();
