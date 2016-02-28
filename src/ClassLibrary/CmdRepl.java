@@ -404,6 +404,7 @@ public class CmdRepl implements Serializable {
            try {
                System.out.println("Building the concordance. This may take a moment for large books.");
             this.concord = new Concord(bookInformation[0], bookInformation[1], bookInformation[2]);
+            this.prompt = "\n" + bookInformation[0] + " by " +bookInformation[1] + " > ";
             this.conLoaded = true;
                System.out.println("SUCCESS: The concordance was built and loaded.");
         } catch (IOException ex) {
