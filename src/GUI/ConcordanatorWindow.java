@@ -47,22 +47,34 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
         booksPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         booksList = new javax.swing.JList();
-        buttonPanel = new javax.swing.JPanel();
-        newBookButton = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
         concordancePanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         concordList = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
-        countLabel = new javax.swing.JLabel();
+        bookCountLabel = new javax.swing.JLabel();
+        booksBtnPanel = new javax.swing.JPanel();
+        newBookButton = new javax.swing.JButton();
+        openBookBtn = new javax.swing.JButton();
+        concordBtnPanel = new javax.swing.JPanel();
+        openConcordBtn = new javax.swing.JButton();
+        buildConcordBtn = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        bookSearchBox = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        concordSearchBox = new javax.swing.JTextField();
+        concordCountLabel = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("The Concordanator");
+        setMinimumSize(new java.awt.Dimension(890, 485));
+        setPreferredSize(new java.awt.Dimension(890, 485));
+
+        outterMostPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         booksPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -77,52 +89,14 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
         booksPanel.setLayout(booksPanelLayout);
         booksPanelLayout.setHorizontalGroup(
             booksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
         booksPanelLayout.setVerticalGroup(
             booksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1)
         );
 
-        newBookButton.setText("Add New Book");
-        newBookButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newBookButtonActionPerformed(evt);
-            }
-        });
-
-        jButton2.setText("Build Concordance");
-
-        jButton3.setText("jButton3");
-
-        jButton4.setText("jButton4");
-
-        javax.swing.GroupLayout buttonPanelLayout = new javax.swing.GroupLayout(buttonPanel);
-        buttonPanel.setLayout(buttonPanelLayout);
-        buttonPanelLayout.setHorizontalGroup(
-            buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(buttonPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4)
-                    .addComponent(newBookButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        buttonPanelLayout.setVerticalGroup(
-            buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(buttonPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(newBookButton)
-                .addGap(18, 18, 18)
-                .addComponent(jButton2)
-                .addGap(18, 18, 18)
-                .addComponent(jButton3)
-                .addGap(18, 18, 18)
-                .addComponent(jButton4)
-                .addContainerGap(83, Short.MAX_VALUE))
-        );
+        concordancePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         concordList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -135,19 +109,97 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
         concordancePanel.setLayout(concordancePanelLayout);
         concordancePanelLayout.setHorizontalGroup(
             concordancePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(concordancePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE))
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         concordancePanelLayout.setVerticalGroup(
             concordancePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
         );
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel1.setText("Current books in the library:");
+        jLabel1.setText("Total books in the library:");
 
-        countLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        bookCountLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+
+        booksBtnPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        newBookButton.setText("Add New Book");
+        newBookButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newBookButtonActionPerformed(evt);
+            }
+        });
+
+        openBookBtn.setText("Open Book");
+
+        javax.swing.GroupLayout booksBtnPanelLayout = new javax.swing.GroupLayout(booksBtnPanel);
+        booksBtnPanel.setLayout(booksBtnPanelLayout);
+        booksBtnPanelLayout.setHorizontalGroup(
+            booksBtnPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(booksBtnPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(newBookButton, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addComponent(openBookBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        booksBtnPanelLayout.setVerticalGroup(
+            booksBtnPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, booksBtnPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(booksBtnPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(newBookButton)
+                    .addComponent(openBookBtn))
+                .addContainerGap())
+        );
+
+        concordBtnPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        openConcordBtn.setText("Open Concordance");
+
+        buildConcordBtn.setText("Build Concordance");
+
+        javax.swing.GroupLayout concordBtnPanelLayout = new javax.swing.GroupLayout(concordBtnPanel);
+        concordBtnPanel.setLayout(concordBtnPanelLayout);
+        concordBtnPanelLayout.setHorizontalGroup(
+            concordBtnPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(concordBtnPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(openConcordBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addComponent(buildConcordBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        concordBtnPanelLayout.setVerticalGroup(
+            concordBtnPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(concordBtnPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(concordBtnPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(openConcordBtn)
+                    .addComponent(buildConcordBtn))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jLabel2.setText("Search Books: ");
+
+        bookSearchBox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                bookSearchBoxKeyTyped(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel3.setText("Total concordances in the library: ");
+
+        jLabel4.setText("Search Concordances: ");
+
+        concordSearchBox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                concordSearchBoxKeyTyped(evt);
+            }
+        });
+
+        concordCountLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
         javax.swing.GroupLayout outterMostPanelLayout = new javax.swing.GroupLayout(outterMostPanel);
         outterMostPanel.setLayout(outterMostPanelLayout);
@@ -156,17 +208,29 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
             .addGroup(outterMostPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(outterMostPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(outterMostPanelLayout.createSequentialGroup()
+                    .addGroup(outterMostPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(outterMostPanelLayout.createSequentialGroup()
+                            .addComponent(jLabel2)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(bookSearchBox))
                         .addComponent(booksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(buttonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(concordancePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(booksBtnPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(outterMostPanelLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(countLabel)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(bookCountLabel)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addGroup(outterMostPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(outterMostPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(concordCountLabel))
+                    .addComponent(concordancePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(concordBtnPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(outterMostPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(concordSearchBox)))
                 .addContainerGap())
         );
         outterMostPanelLayout.setVerticalGroup(
@@ -174,13 +238,23 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
             .addGroup(outterMostPanelLayout.createSequentialGroup()
                 .addGroup(outterMostPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(countLabel))
+                    .addComponent(bookCountLabel)
+                    .addComponent(jLabel3)
+                    .addComponent(concordCountLabel))
+                .addGap(17, 17, 17)
+                .addGroup(outterMostPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(bookSearchBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(concordSearchBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(outterMostPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(booksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buttonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(concordancePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(concordancePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(booksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(outterMostPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(booksBtnPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(concordBtnPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         jMenu1.setText("File");
@@ -188,6 +262,9 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
 
         jMenu2.setText("Edit");
         jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("Help");
+        jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
 
@@ -203,6 +280,7 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void newBookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newBookButtonActionPerformed
@@ -214,6 +292,24 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
 
         File chosenFile = chooser.getSelectedFile();
     }//GEN-LAST:event_newBookButtonActionPerformed
+
+    private void bookSearchBoxKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_bookSearchBoxKeyTyped
+        booksModel = new DefaultListModel();
+        String[] books = shelf.getBookTitlesByKeyword(this.bookSearchBox.getText());
+        for (String book : books) {
+            booksModel.addElement(book);
+        }
+        booksList.setModel(booksModel);
+    }//GEN-LAST:event_bookSearchBoxKeyTyped
+
+    private void concordSearchBoxKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_concordSearchBoxKeyTyped
+        concordModel = new DefaultListModel();
+        String[] concords = shelf.getConcordancesByKeyword(this.concordSearchBox.getText());
+        for (String concord : concords) {
+            concordModel.addElement(concord);
+        }
+        concordList.setModel(concordModel);
+    }//GEN-LAST:event_concordSearchBoxKeyTyped
 
     /**
      * @param args the command line arguments
@@ -251,36 +347,55 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel bookCountLabel;
+    private javax.swing.JTextField bookSearchBox;
+    private javax.swing.JPanel booksBtnPanel;
     private javax.swing.JList booksList;
     private javax.swing.JPanel booksPanel;
-    private javax.swing.JPanel buttonPanel;
+    private javax.swing.JButton buildConcordBtn;
+    private javax.swing.JPanel concordBtnPanel;
+    private javax.swing.JLabel concordCountLabel;
     private javax.swing.JList concordList;
+    private javax.swing.JTextField concordSearchBox;
     private javax.swing.JPanel concordancePanel;
-    private javax.swing.JLabel countLabel;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton newBookButton;
+    private javax.swing.JButton openBookBtn;
+    private javax.swing.JButton openConcordBtn;
     private javax.swing.JPanel outterMostPanel;
     // End of variables declaration//GEN-END:variables
     private Bookshelf shelf;
     private Concord concord;
-    DefaultListModel model;
+    DefaultListModel booksModel;
+    DefaultListModel concordModel;
 
     private void populateGUI() {
-        model = new DefaultListModel();
+        booksModel = new DefaultListModel();
         String[] books = shelf.getAllBookTitles();
         for (String book : books) {
-            model.addElement(book);
+            booksModel.addElement(book);
         }
-        booksList.setModel(model);
-        countLabel.setText(Integer.toString(shelf.getNumberOfBooks()));
+        booksList.setModel(booksModel);
+        
+        concordModel = new DefaultListModel();
+        String[] concords = shelf.getAllConcordances();
+        for (String concord : concords) {
+            concordModel.addElement(concord);
+        }
+        concordList.setModel(concordModel);
+        
+        
+        bookCountLabel.setText(Integer.toString(shelf.getNumberOfBooks()));
+        concordCountLabel.setText(Integer.toString(concordList.getLastVisibleIndex() +1));
         booksList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
