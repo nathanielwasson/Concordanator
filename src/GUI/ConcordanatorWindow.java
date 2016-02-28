@@ -295,6 +295,11 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
         jMenu1.add(jSeparator1);
 
         exitProgramMenu.setText("Exit Program");
+        exitProgramMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitProgramMenuActionPerformed(evt);
+            }
+        });
         jMenu1.add(exitProgramMenu);
 
         jMenuBar1.add(jMenu1);
@@ -379,6 +384,10 @@ public class ConcordanatorWindow extends javax.swing.JFrame {
     private void openBookBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openBookBtnActionPerformed
         this.doubleClickBooks(this.selectedBook);
     }//GEN-LAST:event_openBookBtnActionPerformed
+
+    private void exitProgramMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitProgramMenuActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_exitProgramMenuActionPerformed
 
     /**
      * @param args the command line arguments
