@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;  
 import java.util.concurrent.Executors; 
+import java.util.HashMap;
 
 /**
  *
@@ -44,7 +45,7 @@ public class CmdRepl implements Serializable {
         addbook,
         listcons,
         build,
-        search,
+        summary,
         numoccur,
         numlines,
         rank,
@@ -106,7 +107,7 @@ public class CmdRepl implements Serializable {
             listcons [keyword]
             prompt => [title of con] >
             build <title | path> (possibly redundant)
-            search <keyword>
+            summary <keyword>
             numoccur <keyword>
             numlines <title>
             surrwords <keyword, offset>
@@ -163,7 +164,8 @@ public class CmdRepl implements Serializable {
         switch (command) {
             case load :
                 if (this.loadConcordance(cmdArg.toString()
-                        .substring(1, cmdArg.toString().length() - 1))) this.conLoaded = true;
+                        .substring(1, cmdArg.toString().length() - 1))) 
+					this.conLoaded = true;
                 break;
             case help :
                 this.printHelp();
@@ -190,7 +192,6 @@ public class CmdRepl implements Serializable {
                     this.listCords(cmdArg.toString().substring(1, 
                             cmdArg.toString().length() - 1));
                 }
-                
                 break; 
             case addbook :
                 if (cmdArg.toString().equals("[]")) {
@@ -204,47 +205,53 @@ public class CmdRepl implements Serializable {
                 this.buildConcordance(cmdArg.toString()
                         .substring(1, cmdArg.toString().length() - 1));
                 break;
-            case search :
+            case summary :
+				System.out.println(cmdArg.get(0));
                 if (!conLoaded) {
                     System.out.println("Error: no concordance loaded.");
                 } else {
-                    
+					if (cmdArg.toString().equals("[]")) {
+						// Show a summary of the whole concordance
+						break;
+					} else {
+						this.showWordSummary(cmdArg.get(0).toLowerCase());
+					}
                 }
                 break;
             case numoccur :
                 if (!conLoaded) {
                     System.out.println("Error: no concordance loaded.");
                 } else {
-                     if (cmdArg.toString().equals("[]")) {
-                         System.out.println("Incorrect Usage: Number of word occurences requires an argument.");
-                } else {
-                    this.numOccurences(cmdArg.toString().substring(1, 
-                            cmdArg.toString().length() - 1));
-                }
+                	if (cmdArg.toString().equals("[]")) {
+                    	System.out.println("Incorrect Usage: Number of word occurences requires an argument.");
+                	} else {
+                    	this.numOccurences(cmdArg.toString().substring(1, 
+									cmdArg.toString().length() - 1));
+                	}
                 }
                 break;
             case numlines :
                 if (!conLoaded) {
                     System.out.println("Error: no concordance loaded.");
                 } else {
-                 if (cmdArg.toString().equals("[]")) {
-                         System.out.println("Incorrect Usage: Number of lines requires an argument.");
-                } else {
-                    this.numberOfLines(cmdArg.toString().substring(1, 
-                            cmdArg.toString().length() - 1));
-                }
+                	if (cmdArg.toString().equals("[]")) {
+                    	System.out.println("Incorrect Usage: Number of lines requires an argument.");
+                	} else {
+                    	this.numberOfLines(cmdArg.toString().substring(1, 
+									cmdArg.toString().length() - 1));
+                	}
                 }
                 break;
             case rank :
                 if (!conLoaded) {
                     System.out.println("Error: no concordance loaded.");
                 } else {
-                 if (cmdArg.toString().equals("[]")) {
+                	if (cmdArg.toString().equals("[]")) {
                          System.out.println("Incorrect Usage: Rank requires an argument.");
-                } else {
-                    this.rank(cmdArg.toString().substring(1, 
-                            cmdArg.toString().length() - 1));
-                }
+                	} else {
+                    	this.rank(cmdArg.toString().substring(1, 
+									cmdArg.toString().length() - 1));
+                	}
                 }
                 break;
             case phrase :
@@ -337,6 +344,33 @@ public class CmdRepl implements Serializable {
     public int findArg(String arg) {
         throw new UnsupportedOperationException();
     }
+
+	/**
+	 * @param The string word to show a summary for
+	 * 
+	 */
+	private void showWordSummary(String word) {
+		int rank = this.concord.get_appearance_rank(word);
+		int numLines = this.concord.get_number_lines(word);
+		int occur = this.concord.get_number_occurrences(word);
+
+		//Find the word and print out the lines in which it occurs
+		ArrayList<Integer> lines = this.concord.getWordLines(word);
+		String linesStr = "";
+
+		for (int i = 0; i < lines.size(); i++) {
+			linesStr = linesStr + lines.get(i) + " ";
+			if (i % 10 == 0) linesStr = linesStr + "\n";
+		}
+
+		System.out.println(linesStr);
+
+		System.out.println("Summary of " + word + ": \n"
+				+ "Rank:                       " + rank + "\n"
+				+ "Num of Lines appeared on:   " + numLines + "\n"
+				+ "Number of occurrences:      " + occur + "\n"
+				+ "Line numbers containing " + word + ":\n");
+	}
     
     private void listbooks() {
         String[] titles = shelf.getAllBookTitles();
@@ -407,17 +441,15 @@ public class CmdRepl implements Serializable {
             this.prompt = "\n" + bookInformation[0] + " by " +bookInformation[1] + " > ";
             this.conLoaded = true;
                System.out.println("SUCCESS: The concordance was built and loaded.");
-        } catch (IOException ex) {
-            System.out.println("File Error: The file is not found on the system.");
-        } 
+        	} catch (IOException ex) {
+				System.out.println("File Error: The file is not found on the system.");
+        	} 
         } 
     }
     
     private void numOccurences (String word){
         int temp = concord.get_number_occurrences(word);
         System.out.println("The word " + word + " appears " + temp + " times.");
-        
-        
     }
     
     private void numberOfLines(String word){
@@ -448,10 +480,11 @@ public class CmdRepl implements Serializable {
                 + "help                    - show this help.\n"
                 + "listbooks [keyword]     - list all books matching keyword.\n"
                 + "listcons [keyword]      - list concordances matching keyword.\n"
-                + "build [keyword]         - build a concordance by book title.\n"
-                + "search <keyword>        - find occurrences of keyword in loaded concordance.\n"
+                + "build <keyword>         - build a concordance by book title.\n"
+                + "search <keyword>        - DEPRICATED find occurrences of keyword in loaded concordance.\n"
                 + "numoccur <keyword>      - find number of occurrences of keyword in loaded concordance.\n"
                 + "numlines <title>        - return the number of lines in the file.\n"
+				+ "rank <word>             - show the ranking of a word in a con by appearance.\n"
                 + "phrase <phrase>         - find occurrences of phrase in loaded concordance.\n"
                 + "exit                    - close Concordanator application.\n";
         

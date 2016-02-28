@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 
-/***
+/**
  * @author seth
  */
 public class Concord implements Serializable{
@@ -489,4 +489,14 @@ public class Concord implements Serializable{
         
         return full_phrase_lines;
     }
+
+	/**
+	 * @param String word for which to get array of line numbers associated with it.
+	 * @return ArrayList<Integer> array containing line number on which word occurs.
+	 */
+	public ArrayList<Integer> getWordLines(String word) {
+		ArrayList<Integer> lines = this.getConcord().get(word).getListLines();
+
+		return lines;
+	}
 }
