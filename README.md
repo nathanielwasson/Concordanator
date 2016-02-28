@@ -12,16 +12,30 @@ Tony Ratlif
 Cory Sebastain Sabol
 Seth Askew
 
+### This project is built using java 1.8 however it `should` be backwards compatible.
+
 #### Using with netbeans:
-1. Clone the repo or switch to the master branch and `git pull origin master` to update.
-2. Create a new netbeans project in a separate directory from where you cloned the repo.
-3. Select create project from existing sources.
-4. Follow the prompts and add the src and test folder from the repo as sources for the project.
-5. finish
+1. Open NetBeans and create a new project from existing sources.
+2. Follow the prompts, selecting the src folder for sources and the test folder for tests.
+3. Let NB do it's thing.
+4. You should now be able to run and compile the code from inside NB.
 
-Now you should have a working netbeans project. Git actions will need to be made from the repo dir.
+## Building and running from the command line, like a real man/woman >:^)
+1. `cd` into the root dir of the project.
+2. execute `javac -sourcepath src src/ClassLibrary/Main.java -d build/`
+3. Once that's done execute `java -cp build ClassLibrary.Main`
+4. if that doesn't work then try `java -cp build ClassLibrary/Main`
+4. Enjoy your concordances.
 
+## Things that don't work
+Most of the commands don't work. The functionality is in the library, however testing is not complete and
+the command line interface doesn't tie everything together just yet.
 
 #### General Todo:
 1. Document all the things.
 2. Come up with more todos.
+
+#### If you have questions, shoot them at:
+1. Cory Sabol   -  cssabol@uncg.edu
+2. Tony Ratliff -  arratlif@uncg.edu
+3. Seth Askew   -  tsaskew@uncg.edu

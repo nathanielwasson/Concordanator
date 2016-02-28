@@ -15,8 +15,10 @@ public class Concordanator{
         
         try {
             
-            if (args.length != 0 && args[1].equals("gui")) {
+            if (args.length != 0 && args[0].equals("gui")) {
                 // Launch the gui from here
+                //ConcordanatorWindow window = new ConcordanatorWindow();
+                window.setVisible(true);
             } else if (args.length == 1 || args.length == 0) {
                 repl.startRepl("");
             } else {
