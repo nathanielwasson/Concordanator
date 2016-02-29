@@ -13,6 +13,7 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.HashMap;
+import java.util.Map;
 import ClassLibrary.Concord.Word;
 import java.util.Set;
 
@@ -39,6 +40,7 @@ public class CmdRepl implements Serializable {
     private String concordDirectory;   // Holds the exact path of the concordance based on the user's OS environment.
     private final String booksDir;
     private final boolean isWin;
+	private final Map<String, String> env = System.getenv();
 
     private enum Commands {
         load,
@@ -75,6 +77,10 @@ public class CmdRepl implements Serializable {
         this.shelf = new Bookshelf();
 
         this.userDir = System.getProperty("user.dir");
+
+		for (String k : env.keySet()) {
+			System.out.println("Key: " + k + " value: " + env.get(k));
+		}
 
         if (this.OSName.equals("Win")) {
             //this.conDir = this.userDir + "\\cons";
