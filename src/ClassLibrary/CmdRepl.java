@@ -461,18 +461,30 @@ public class CmdRepl implements Serializable {
     }
     
     private void numOccurences (String word){
+        if (!this.isCommonWord(word)){
         int temp = concord.get_number_occurrences(word);
         System.out.println("The word " + word + " appears " + temp + " times.");
+        } else {
+            System.out.println("TOO MANY ENTRIES:  The word you are searching for is too common.  Please be more specific.");
+        }
     }
     
     private void numberOfLines(String word){
+        if (!this.isCommonWord(word)){
         int temp = concord.get_number_lines(word);
         System.out.println("The word " + word + " appears on " + temp + " lines.");
+        } else {
+            System.out.println("TOO MANY ENTRIES:  The word you are searching for is too common.  Please be more specific.");
+        }
     }
     
     private void rank(String word){
+        if (!this.isCommonWord(word)){
         int temp = concord.get_appearance_rank(word);
         System.out.println("The word " + word + " is ranked: " + temp);
+        } else {
+            System.out.println("TOO MANY ENTRIES:  The word you are searching for is too common.  Please be more specific.");
+        }
     }
     
         private void addBook(String filePath) {
