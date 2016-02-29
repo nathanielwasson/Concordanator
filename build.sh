@@ -13,6 +13,10 @@ flag=0
 export cols=$cols
 export lines=$lines
 
+echo $cols
+echo $lines
+printenv
+
 #Now check to make sure build/ doesn't already exist
 if [ ! -d "$build_dir" ]; then
 	#Dir didn't exist so create it
@@ -34,7 +38,7 @@ cp "src/ClassLibrary/commonwords.txt" "build/ClassLibrary/"
 echo ""
 echo "Generating run.sh"
 touch run.sh
-echo "cd build/ && java Concordanator" > run.sh 
+echo "export cols=$cols; export lines=$lines; cd build/ && java Concordanator" > run.sh 
 cat run.sh
 chmod +x run.sh
 echo "DONE"

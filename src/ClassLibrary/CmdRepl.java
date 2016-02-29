@@ -41,6 +41,10 @@ public class CmdRepl implements Serializable {
     private final String booksDir;
     private final boolean isWin;
 	private final Map<String, String> env = System.getenv();
+	// These two values only matter on *nix systems right now.
+	// Given more time we would make this work for m$ wangblows as well.
+	private int cols = 80;
+	private int lines = 20;
 
     private enum Commands {
         load,
@@ -63,7 +67,7 @@ public class CmdRepl implements Serializable {
     }
 
     /**
-     * *
+     * 
      * Constuctor for the repl.
      *
      * @param args
@@ -78,8 +82,8 @@ public class CmdRepl implements Serializable {
 
         this.userDir = System.getProperty("user.dir");
 
-		for (String k : env.keySet()) {
-			System.out.println("Key: " + k + " value: " + env.get(k));
+		for (String k : System.getenv().keySet()) {
+			System.out.println(k + " : " + System.getenv().get(k));
 		}
 
         if (this.OSName.equals("Win")) {
@@ -90,6 +94,18 @@ public class CmdRepl implements Serializable {
             //this.conDir = this.userDir + "/cons";
             this.booksDir = this.userDir + "/cons";
             this.isWin = false;
+
+			if (env.get("cols") == null) {
+				this.cols = 80;
+			} else if (env.get("lines") == null) {
+				this.lines = 20;
+			} else {	
+				this.cols = Integer.parseInt(env.get("cols"));
+				this.lines = Integer.parseInt(env.get("lines"));
+			}
+
+			System.out.println(this.cols);
+			System.out.println(this.lines);
         }
 
         this.concordDirectory = this.userDir + File.separator + CONCORD_DIRECTORY;    // set the book directory.
