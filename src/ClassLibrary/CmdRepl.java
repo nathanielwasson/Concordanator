@@ -462,10 +462,19 @@ public class CmdRepl implements Serializable {
         } else {
            try {
                System.out.println("Building the concordance. This may take a moment for large books.");
+               long startTime = System.currentTimeMillis();
             this.concord = new Concord(bookInformation[0], bookInformation[1], bookInformation[2]);
+            long endTime = System.currentTimeMillis();
             this.prompt = "\n" + bookInformation[0] + " by " +bookInformation[1] + " > ";
             this.conLoaded = true;
-               System.out.println("SUCCESS: The concordance was built and loaded.");
+            int totalTime = (int)(endTime - startTime)/1000;
+            String minute = null;
+            if (totalTime/60 == 1){
+                minute = " minute ";
+            }else {
+                minute = " minutes ";
+            }
+               System.out.println("SUCCESS: The concordance was built and loaded in " + (totalTime/60) + minute + "and " + (totalTime%60) + " seconds.");
         	} catch (IOException ex) {
 				System.out.println("File Error: The file is not found on the system.");
         	} 
