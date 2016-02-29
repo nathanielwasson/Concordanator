@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 
-/**
+/***
  * @author seth
  */
 public class Concord implements Serializable{
@@ -21,11 +21,12 @@ public class Concord implements Serializable{
     private HashMap<String, Word> concord;
     private ArrayList<String> unique_words, common_words;
     private HashMap<String, Integer> all_appearances,appearance_ranks;
+    Object getFileWords;
     
   
     /**
      * 
-     * @param file_name name of the file to make the concordance from
+     * @param file_name name of the file to make the Concordance from
      * @throws IOException 
      */
     public Concord(String title, String author, String file_name) throws IOException{
@@ -43,15 +44,15 @@ public class Concord implements Serializable{
         System.out.print("\r|==       | Stage 2 of 9");
         this.flat_words = flat_words_full.split("[\\s--.,;\\n\\t]");
         System.out.print("\r|===      | Stage 3 of 9");
-        this.unique_words = this.set_unique_words();
-        System.out.print("\r|====     | Stage 4 of 9");
-        this.all_appearances = this.set_all_appearances();
-        System.out.print("\r|=====    | Stage 5 of 9");
-        this.appearance_ranks = this.set_appearance_ranks();
-        System.out.print("\r|======   | Stage 6 of 9");
-        this.concord = this.set_concord();
-        System.out.print("\r|=======  | Stage 7 of 9");
         this.common_words = this.set_common_words();
+        System.out.print("\r|======   | Stage 4 of 9");
+        this.unique_words = this.set_unique_words();
+        System.out.print("\r|====     | Stage 5 of 9");
+        this.all_appearances = this.set_all_appearances();
+        System.out.print("\r|=====    | Stage 6 of 9");
+        this.appearance_ranks = this.set_appearance_ranks();
+        System.out.print("\r|=======  | Stage 7 of 9");
+        this.concord = this.set_concord();
         System.out.print("\r|======== | Stage 8 of 9");
         this.save();
         System.out.print("\r|=========| Stage 9 of 9\n");
@@ -186,8 +187,14 @@ public class Concord implements Serializable{
             
             //Writes each line in the file to an array 'file_lines'
             String[] file_lines = new String[this.number_of_lines];
+            //only include text after line with *** start of gb... ***
+            Boolean started = false, ended = false;
             for (int i = 0; i < this.number_of_lines; i++) {
-              file_lines[i] = buffered_reader.readLine();
+                    String tmp_line = buffered_reader.readLine(); 
+                    if (tmp_line == null) { tmp_line = ""; }                    
+                    if (tmp_line.contains("*** END")) { ended = true; } //check end condition before writing
+                    if (started && !ended) { file_lines[i] = tmp_line; }
+                    if (tmp_line.contains("*** START")) { started = true; } //check for start condition after checking                    
             }
     
         return file_lines;
@@ -268,8 +275,10 @@ public class Concord implements Serializable{
             if (file_words[i]!=null){
                 //for word in line
                 for (int j = 0; j < file_words[i].size(); j++) {
-                    if (!(unique_words.contains((String) file_words[i].get(j)))){
-                        unique_words.add((String) file_words[i].get(j));
+                    String wordinquestion = (String) file_words[i].get(j);
+                    if (!unique_words.contains(wordinquestion) ){
+                        if (!common_words.contains(wordinquestion))
+                        unique_words.add(wordinquestion);
                     }
                 }
             }
@@ -408,6 +417,19 @@ public class Concord implements Serializable{
                 common_words.add(line);
             }
             return common_words;
+            
+            
+//            ArrayList<String> common_words = new ArrayList<String>();
+//            
+//            //open file
+//            FileReader file_reader = new FileReader("commonwords.txt");
+//            BufferedReader  buffered_reader = new BufferedReader(file_reader);
+//            String line;
+//            //Write each line in file to element in array
+//            while((line = buffered_reader.readLine())!=null){
+//                common_words.add(line);
+//            }
+//            return common_words;
     }
 
     /**
@@ -436,18 +458,19 @@ public class Concord implements Serializable{
     }
     
     /**
-     * saves the seralized concord to filename.con
+     * saves the serialized concord to filename.con
      * @throws FileNotFoundException
      * @throws IOException 
      */
     public void save() throws FileNotFoundException, IOException{
-        /*String name = this.file_name.substring(0, this.file_name.length()-4) + ".con";
-        FileOutputStream fileOut = new FileOutputStream(name);
-        ObjectOutputStream out = new ObjectOutputStream(fileOut);
-        out.writeObject(this);
-        out.close();
-        fileOut.close();*/
-        IO<Concord> io = new IO<Concord>(this.file_name);
+//        String name = this.file_name.substring(0, this.file_name.length()-4) + ".con";
+//        FileOutputStream fileOut = new FileOutputStream(name);
+//        ObjectOutputStream out = new ObjectOutputStream(fileOut);
+//        out.writeObject(this);
+//        out.close();
+//        fileOut.close();
+        String conFile = this.file_name.substring(0, this.file_name.lastIndexOf(File.separator)) + File.separator + this.book_title + " by " + this.book_author + ".con";
+        IO<Concord> io = new IO<Concord>(conFile);
         io.serialize(this);
     }
     /**
