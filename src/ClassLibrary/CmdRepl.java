@@ -9,7 +9,6 @@ import java.io.*;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.ExecutorService;  
 import java.util.concurrent.Executors; 
 import java.util.HashMap;
@@ -48,6 +47,7 @@ public class CmdRepl implements Serializable {
         listbooks,
         addbook,
         listcons,
+        searchcons,
         build,
         summary,
         numoccur,
@@ -60,7 +60,7 @@ public class CmdRepl implements Serializable {
     }
     
     /***
-     * Constuctor for the repl.
+     * Constructor for the repl.
      * @param args 
      */
     public CmdRepl() {
@@ -113,6 +113,7 @@ public class CmdRepl implements Serializable {
             help
             listbooks [keyword]
             listcons [keyword]
+            searchcons [keyword] [integer]
             prompt => [title of con] >
             build <title | path> (possibly redundant)
             summary <keyword>
@@ -190,17 +191,23 @@ public class CmdRepl implements Serializable {
                 if (cmdArg.isEmpty()) {
                     // This section fires if there are no arguments.
                     this.listCords();
-                } else if (cmdArg.size() == 2 && this.isInteger(cmdArg.get(1), 10)){
-                    // This section only fires if there are only two keywords and the second is an integer.
-                    int numAppear = Integer.parseInt(cmdArg.get(1));
-                    this.listCords(cmdArg.get(0), numAppear);
-                }
+                } 
                 else {
                     // This section fires for any other case.
                     this.listCords(cmdArg.toString().substring(1, 
                             cmdArg.toString().length() - 1));
                 }
-                break; 
+                break;
+            case searchcons :
+                if (cmdArg.size() == 1){
+                    this.listCords(cmdArg.get(0), 1);
+                } else if (cmdArg.size() == 2 && this.isInteger(cmdArg.get(1), 10)){
+                    int numAppear = Integer.parseInt(cmdArg.get(1));
+                    this.listCords(cmdArg.get(0), numAppear);
+                } else {
+                    System.out.println("ERROR: Incorrect usage.  Searchcons requires a keyword and an integer representing the minimum number of appearances.");
+                }
+                break;
             case addbook :
                 if (cmdArg.toString().equals("[]")) {
                     System.out.println("ERROR: Incorrect usage.  Please provide a path to the book to be added.");
@@ -363,6 +370,7 @@ public class CmdRepl implements Serializable {
 	 * 
 	 */
 	private void showWordSummary(String word) {
+            if (!this.commonWords.contains(word)){
 		int rank = this.concord.get_appearance_rank(word);
 		int numLines = this.concord.get_number_lines(word);
 		int occur = this.concord.get_number_occurrences(word);
@@ -376,13 +384,17 @@ public class CmdRepl implements Serializable {
 			if (i % 10 == 0) linesStr = linesStr + "\n";
 		}
 
-		System.out.println(linesStr);
+		
 
 		System.out.println("Summary of " + word + ": \n"
 				+ "Rank:                       " + rank + "\n"
 				+ "Num of Lines appeared on:   " + numLines + "\n"
 				+ "Number of occurrences:      " + occur + "\n"
 				+ "Line numbers containing " + word + ":\n");
+                System.out.println(linesStr);
+            } else {
+                System.out.println("TOO MANY ENTRIES:  The word you are searching for is too common.  Please be more specific.");
+            }
 	}
     
     private void listbooks() {
@@ -461,7 +473,7 @@ public class CmdRepl implements Serializable {
     }
     
     private void numOccurences (String word){
-        if (!this.isCommonWord(word)){
+        if (!this.commonWords.contains(word)){
         int temp = concord.get_number_occurrences(word);
         System.out.println("The word " + word + " appears " + temp + " times.");
         } else {
@@ -470,7 +482,7 @@ public class CmdRepl implements Serializable {
     }
     
     private void numberOfLines(String word){
-        if (!this.isCommonWord(word)){
+        if (!this.commonWords.contains(word)){
         int temp = concord.get_number_lines(word);
         System.out.println("The word " + word + " appears on " + temp + " lines.");
         } else {
@@ -479,7 +491,7 @@ public class CmdRepl implements Serializable {
     }
     
     private void rank(String word){
-        if (!this.isCommonWord(word)){
+        if (!this.commonWords.contains(word)){
         int temp = concord.get_appearance_rank(word);
         System.out.println("The word " + word + " is ranked: " + temp);
         } else {
@@ -517,12 +529,15 @@ public class CmdRepl implements Serializable {
     }
     
     private boolean isInteger(String s, int radix){
-        Scanner sc = new Scanner(s.trim());
-        if(!sc.hasNextInt(radix)) return false;
-        // we know it starts with a valid int, now make sure
-        // there's nothing left!
-        sc.nextInt(radix);
-        return !sc.hasNext();
+        if(s.isEmpty()) return false;
+    for(int i = 0; i < s.length(); i++) {
+        if(i == 0 && s.charAt(i) == '-') {
+            if(s.length() == 1) return false;
+            else continue;
+        }
+        if(Character.digit(s.charAt(i),radix) < 0) return false;
+    }
+    return true;
     }
     
     private boolean populateCommonWords(){
@@ -542,9 +557,5 @@ public class CmdRepl implements Serializable {
             }
         }
         return success;
-    }
-    
-    private boolean isCommonWord(String word){
-        return this.commonWords.contains(word);
     }
 }
