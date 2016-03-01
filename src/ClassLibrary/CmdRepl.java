@@ -342,7 +342,7 @@ public class CmdRepl implements Serializable {
         if (bookInformation == null){
             System.out.println("Error: No concordance found. Please check the name and try again.");
         } else {
-            String conPath = bookInformation[2].substring(0, bookInformation[2].length()-4) + ".con";
+            String conPath = bookInformation[2].substring(0, bookInformation[2].lastIndexOf(File.separator)) + File.separator + bookInformation[0] + " by " + bookInformation[1] + ".con";
             File conFile = new File(conPath);
             if (conFile.isFile()){
                 IO<Concord> io = new IO<Concord>(conPath);
